@@ -11,3 +11,4 @@ Encoding: UTF-8
 LazyData: true
 Imports: data.table, magrittr
 Depends: data.table, magrittr
+RoxygenNote: 6.1.1
