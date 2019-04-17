@@ -3,9 +3,56 @@
 # reguired:
 # - daily netcdf
 
-# todo:
-# - convert units? (maybe optional, have a look at the udunits package!)
 
+#' Extract time series of a single grid cell of a rot-pole daily netcdf to
+#' data.table
+#'
+#' Creates a \code{\link[data.table]{data.table}} from a rotated pole netcdf (as
+#' usually found in RCMs), which includes values and date. Useful for extracting
+#' e.g. the series for a station. Requires that dimension variables in netcdf
+#' file contain rlon and rlat, and that it contains daily data.
+#'
+#' Calculates the euclidean distance, and takes the grid cell with minimal
+#' distance to \code{point_lon} and \code{point_lat}. Requires that the .nc file
+#' contains variables lon[rlon, rlat] and lat[rlon, rlat].
+#'
+#' @param filename Complete path to .nc file.
+#' @param variable Name of the variable to extract from \code{filename}
+#'   (character).
+#' @param point_lon Numeric longitude of the point to extract (decimal degrees).
+#' @param point_lat Numeric latitude of the point to extract (decimal degrees).
+#' @param interpolate_to_standard_calendar Boolean, if \code{TRUE} will use
+#'   \code{\link{map_non_standard_calendar}} to interpolate values to a standard
+#'   calendar.
+#' @param verbose Boolean, if \code{TRUE}, will print more information.
+#'
+#' @return A \code{\link[data.table]{data.table}} with two columns: the dates in
+#'   date, and the values in a variable named after input \code{variable}. The
+#'   date column is of class \code{\link[data.table]{IDate}}, unless the .nc
+#'   file has a non-standard calendar (360, noleap) and
+#'   \code{interpolate_to_standard_calendar} is set to \code{FALSE}, in which it
+#'   will be of class PCICT.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # data are from EURO-CORDEX
+#' # standard calendar
+#' dt1 <- rotpole_nc_point_to_dt(filename = "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
+#'                               variable = "tas",
+#'                               point_lon = 11.31,
+#'                               point_lat = 46.5,
+#'                               verbose = T)
+#'
+#' # non-standard calendar (360)
+#' dt2 <- rotpole_nc_point_to_dt(filename = "tas_EUR-11_MOHC-HadGEM2-ES_historical_r1i1p1_CLMcom-CCLM4-8-17_v1_day_19491201-19501230.nc",
+#'                               variable = "tas",
+#'                               point_lon = 11.31,
+#'                               point_lat = 46.5,
+#'                               interpolate_to_standard_calendar = T,
+#'                               verbose = T)
+#' }
 rotpole_nc_point_to_dt <- function(filename,
                                    variable,
                                    point_lon,
@@ -16,8 +63,10 @@ rotpole_nc_point_to_dt <- function(filename,
   ncobj <- nc_open(filename,
                    readunlim = F)
 
-  grid_lat <- ncvar_get(ncobj, "lat")
+  if(verbose) cat("Succesfully opened file:", filename, "\n")
+
   grid_lon <- ncvar_get(ncobj, "lon")
+  grid_lat <- ncvar_get(ncobj, "lat")
 
   grid_squared_dist <- (grid_lat - point_lat)^2 + (grid_lon - point_lon)^2
 

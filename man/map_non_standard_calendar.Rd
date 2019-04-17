@@ -10,19 +10,12 @@ map_non_standard_calendar(times)
 \item{times}{Vector of class PCICT (will be truncated to days).}
 }
 \value{
-A data.table with columns (dates_full: sequence of standard dates
-  from min to max date in input times as data.table::IDate,
-  dates_pcict_inter: which dates in PCICT from times correspond to the
-  standard dates, idx_pcict: the index associated to the input times to be
-  used for mapping e.g. values)
-  \describe{
-  \item{one}{two}
-  \item{one2}{t4}
-  }
-  \itemize{
-  \item one two: sadsa
-  \item on2sd
-  }
+A \code{\link{data.table}} with columns:
+
+  \itemize{ \item dates_full: sequence of standard dates from min to max date
+  in input times as data.table::IDate \item dates_pcict_inter: which dates in
+  PCICT from times correspond to the standard dates \item idx_pcict: the
+  index associated to the input times to be used for mapping e.g. values }
 }
 \description{
 Interpolates non-standard calendars (360 and noleap) to the standard
