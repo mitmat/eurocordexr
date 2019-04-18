@@ -1,14 +1,29 @@
 Package: eurocordexr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Makes it easier to work with daily netcdf from EURO-CORDEX RCMs
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: person("Michael", "Matiu", email = "michael.matiu@eurac.edu",
+                  role = c("aut", "cre"))
+Maintainer: Michael Matiu <michael.matiu@eurac.edu>
+Description: 
+    Daily netcdf from e.g. regional climate models (RCM) are not trivial
+    to work with. This package, which relies on data.table, makes it easier
+    to deal with large data from RCMs, such as from EURO-CORDEX. It has functions
+    to extract single grid cells from rotated pole netcdf's as well as the whole 
+    array in long format. Can handle non-standard calendars (360, noleap).
+License: CC-BY-SA-4.0
 Encoding: UTF-8
 LazyData: true
-Imports: data.table, magrittr
-Depends: data.table, magrittr
+Imports: 
+    data.table,
+    lubridate,
+    magrittr,
+    ncdf4,
+    ncdf4.helpers
+Depends: 
+    data.table,
+    lubridate,
+    magrittr,
+    ncdf4,
+    ncdf4.helpers
 RoxygenNote: 6.1.1
