@@ -31,7 +31,7 @@
 #'   date column is of class \code{\link[data.table]{IDate}}, unless the .nc
 #'   file has a non-standard calendar (360, noleap) and
 #'   \code{interpolate_to_standard_calendar} is set to \code{FALSE}, in which it
-#'   will be of class PCICT.
+#'   will be character.
 #'
 #' @export
 #'
@@ -94,9 +94,11 @@ rotpole_nc_point_to_dt <- function(filename,
   # modification for non-standard calendars
   if(! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
 
-    if(verbose) cat("Non-standard calendar found:", attr(times, "cal"))
+    if(verbose) cat("Non-standard calendar found:", attr(times, "cal"), "\n")
 
     if(interpolate_to_standard_calendar){
+
+      if(verbose) cat("Interpolating to standard calendar.\n")
 
       dtx <- map_non_standard_calendar(times)
 
@@ -106,7 +108,7 @@ rotpole_nc_point_to_dt <- function(filename,
 
     } else {
 
-      dates <- trunc(times, "day")
+      dates <- as.character(trunc(times, "day"))
 
     }
 

@@ -30,7 +30,7 @@ A \code{\link[data.table]{data.table}} with two columns: the dates in
   date column is of class \code{\link[data.table]{IDate}}, unless the .nc
   file has a non-standard calendar (360, noleap) and
   \code{interpolate_to_standard_calendar} is set to \code{FALSE}, in which it
-  will be of class PCICT.
+  will be character.
 }
 \description{
 Creates a \code{\link[data.table]{data.table}} from a rotated pole netcdf (as
