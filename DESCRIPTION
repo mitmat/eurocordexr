@@ -27,3 +27,7 @@ Depends:
     ncdf4,
     ncdf4.helpers
 RoxygenNote: 6.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
