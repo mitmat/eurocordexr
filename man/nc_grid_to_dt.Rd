@@ -4,7 +4,7 @@
 \alias{nc_grid_to_dt}
 \title{Convert a netcdf array to long format as data.table}
 \usage{
-nc_grid_to_dt(filename, variable, add_icell = T, add_xy = F,
+nc_grid_to_dt(filename, variable, icell_raster_pkg = T, add_xy = F,
   verbose = F)
 }
 \arguments{
@@ -13,7 +13,9 @@ nc_grid_to_dt(filename, variable, add_icell = T, add_xy = F,
 \item{variable}{Name of the variable to extract from \code{filename}
 (character).}
 
-\item{add_icell}{Boolean, if \code{TRUE}, adds a column with cell indices.}
+\item{icell_raster_pkg}{Boolean, if \code{TRUE}, cell indices will be ordered
+as if you were extracting the data with the \code{\link[raster]{raster}}
+package.}
 
 \item{add_xy}{Boolean, if \code{TRUE}, adds columns with x and y coordinates.}
 
@@ -28,8 +30,18 @@ A \code{\link[data.table]{data.table}} with columns: \itemize{\item
 }
 \description{
 Extracts a variable from netcdf, and returns a
-\code{\link[data.table]{data.table}} with date, values, and optionally: cell
-indices, coordinates.
+\code{\link[data.table]{data.table}} with cell index, date, values, and
+optionally: coordinates.
+}
+\details{
+Coordinates are usually not put in the result, because it saves space. It is
+recommended to merge them after the final operations. The unique cell index is
+more efficient. However, if you plan to merge to data extracted with the
+raster package (assuming the same grid), then cell indices might differ. Set
+\code{icell_raster_pkg} to \code{TRUE}, to have the same cell indices. Note
+that raster and ncdf4 have different concepts of coordinates (cell corner vs.
+cell center), so merging based on coordinates can produce arbitrary results
+(besides rounding issues).
 }
 \section{Warning}{
  Netcdf files can be huge, so loading everything in memory
@@ -42,7 +54,12 @@ indices, coordinates.
 \dontrun{
 dat <- nc_grid_to_dt(filename = "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
                      variable = "tas",
-                     add_icell = T,
-                     add_xy = F)
+                     verbose = T)
 }
+}
+\seealso{
+The raster package can also open netcdf files and create data.frames
+  with \code{\link[raster]{as.data.frame}}. But, it does not handle
+  non-standard calendars, and returns a data.frame, which is slower than
+  data.table.
 }
