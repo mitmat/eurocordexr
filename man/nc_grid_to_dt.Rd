@@ -5,7 +5,7 @@
 \title{Convert a netcdf array to long format as data.table}
 \usage{
 nc_grid_to_dt(filename, variable, icell_raster_pkg = T, add_xy = F,
-  verbose = F)
+  interpolate_to_standard_calendar = F, verbose = F)
 }
 \arguments{
 \item{filename}{Complete path to .nc file.}
@@ -19,12 +19,19 @@ package.}
 
 \item{add_xy}{Boolean, if \code{TRUE}, adds columns with x and y coordinates.}
 
+\item{interpolate_to_standard_calendar}{Boolean, if \code{TRUE} will use
+\code{\link{map_non_standard_calendar}} to interpolate values to a standard
+calendar.}
+
 \item{verbose}{Boolean, if \code{TRUE}, prints more information.}
 }
 \value{
 A \code{\link[data.table]{data.table}} with columns: \itemize{\item
-  date: Date \item variable: Values, column is renamed to input
-  \code{variable} \item (optional) icell: Cell index \item (optional) x,y:
+  icell: Cell index \item date: Date of class
+  \code{\link[data.table]{IDate}}, unless the .nc file has a non-standard
+  calendar (360, noleap) and \code{interpolate_to_standard_calendar} is set
+  to \code{FALSE}, in which it will be character. \item variable: Values,
+  column is renamed to input \code{variable} \item (optional) x,y:
   Coordinates of netcdf dimensions, will be renamed to dimension names found
   in array named after input \code{variable}}
 }
@@ -35,8 +42,8 @@ optionally: coordinates.
 }
 \details{
 Coordinates are usually not put in the result, because it saves space. It is
-recommended to merge them after the final operations. The unique cell index is
-more efficient. However, if you plan to merge to data extracted with the
+recommended to merge them after the final operations. The unique cell index
+is more efficient. However, if you plan to merge to data extracted with the
 raster package (assuming the same grid), then cell indices might differ. Set
 \code{icell_raster_pkg} to \code{TRUE}, to have the same cell indices. Note
 that raster and ncdf4 have different concepts of coordinates (cell corner vs.

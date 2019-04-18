@@ -5,8 +5,8 @@
 #' optionally: coordinates.
 #'
 #' Coordinates are usually not put in the result, because it saves space. It is
-#' recommended to merge them after the final operations. The unique cell index is
-#' more efficient. However, if you plan to merge to data extracted with the
+#' recommended to merge them after the final operations. The unique cell index
+#' is more efficient. However, if you plan to merge to data extracted with the
 #' raster package (assuming the same grid), then cell indices might differ. Set
 #' \code{icell_raster_pkg} to \code{TRUE}, to have the same cell indices. Note
 #' that raster and ncdf4 have different concepts of coordinates (cell corner vs.
@@ -21,11 +21,17 @@
 #'   as if you were extracting the data with the \code{\link[raster]{raster}}
 #'   package.
 #' @param add_xy Boolean, if \code{TRUE}, adds columns with x and y coordinates.
+#' @param interpolate_to_standard_calendar Boolean, if \code{TRUE} will use
+#'   \code{\link{map_non_standard_calendar}} to interpolate values to a standard
+#'   calendar.
 #' @param verbose Boolean, if \code{TRUE}, prints more information.
 #'
 #' @return A \code{\link[data.table]{data.table}} with columns: \itemize{\item
-#'   date: Date \item variable: Values, column is renamed to input
-#'   \code{variable} \item (optional) icell: Cell index \item (optional) x,y:
+#'   icell: Cell index \item date: Date of class
+#'   \code{\link[data.table]{IDate}}, unless the .nc file has a non-standard
+#'   calendar (360, noleap) and \code{interpolate_to_standard_calendar} is set
+#'   to \code{FALSE}, in which it will be character. \item variable: Values,
+#'   column is renamed to input \code{variable} \item (optional) x,y:
 #'   Coordinates of netcdf dimensions, will be renamed to dimension names found
 #'   in array named after input \code{variable}}
 #'
@@ -52,6 +58,7 @@ nc_grid_to_dt <- function(filename,
                           variable,
                           icell_raster_pkg = T,
                           add_xy = F,
+                          interpolate_to_standard_calendar = F,
                           verbose = F){
 
   ncobj <- nc_open(filename,
@@ -64,11 +71,20 @@ nc_grid_to_dt <- function(filename,
   dim_x <- ncvar_get(ncobj, dimnames[1])
   dim_y <- ncvar_get(ncobj, dimnames[2])
 
-  # extract time dimension in IDate format (assuming daily data)
-  nc.get.time.series(ncobj,
-                     variable) %>%
-    as.POSIXct %>%
-    as.IDate -> dates
+  times <- nc.get.time.series(ncobj, variable)
+
+  if(! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
+
+    if(verbose) cat("Non-standard calendar found:", attr(times, "cal"), "\n")
+
+    dates <- as.character(trunc(times, "day"))
+
+  } else {
+
+    times %>%
+      PCICt::as.POSIXct.PCICt() %>%
+      as.IDate -> dates
+  }
 
   nx <- length(dim_x)
   ny <- length(dim_y)
@@ -77,7 +93,6 @@ nc_grid_to_dt <- function(filename,
   dat <- data.table(icell =  rep(1:(nx*ny), ndates),
                     date = rep(dates, each = nx * ny),
                     value = as.vector(ncvar_get(ncobj, variable)))
-  setnames(dat, "value", variable)
 
   if(icell_raster_pkg){
     # raster package orders cells differently (y inverse)
@@ -85,11 +100,30 @@ nc_grid_to_dt <- function(filename,
     dat[, icell := rep(unlist(rev(l_icell_split_y)), ndates)]
   }
 
+
   if(add_xy){
     dat[, x := rep(dim_x, ny * ndates)]
     dat[, y :=  rep(dim_y, each = nx) %>% rep(ndates)]
     setnames(dat, c("x", "y"), dimnames[1:2])
   }
+
+  if(interpolate_to_standard_calendar & ! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
+
+    if(verbose) cat("Interpolating to standard calendar.\n")
+
+    bycols <- "icell"
+    if(add_xy) bycols <- c(bycols, dimnames[1:2])
+
+    dtx <- map_non_standard_calendar(times)
+
+    dat <- dat[,
+                .(date = dtx$dates_full, value = value[dtx$idx_pcict]),
+                by = bycols]
+
+  }
+
+
+  setnames(dat, "value", variable)
 
   nc_close(ncobj)
   return(dat)
