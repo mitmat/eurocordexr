@@ -28,7 +28,7 @@ calendar.}
 \value{
 A \code{\link[data.table]{data.table}} with columns: \itemize{\item
   icell: Cell index \item date: Date of class
-  \code{\link[data.table]{IDate}}, unless the .nc file has a non-standard
+  \code{\link{Date}}, unless the .nc file has a non-standard
   calendar (360, noleap) and \code{interpolate_to_standard_calendar} is set
   to \code{FALSE}, in which it will be character. \item variable: Values,
   column is renamed to input \code{variable} \item (optional) x,y:

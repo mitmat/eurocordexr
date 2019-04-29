@@ -27,7 +27,7 @@ calendar.}
 \value{
 A \code{\link[data.table]{data.table}} with two columns: the dates in
   date, and the values in a variable named after input \code{variable}. The
-  date column is of class \code{\link[data.table]{IDate}}, unless the .nc
+  date column is of class \code{\link{Date}}, unless the .nc
   file has a non-standard calendar (360, noleap) and
   \code{interpolate_to_standard_calendar} is set to \code{FALSE}, in which it
   will be character.
