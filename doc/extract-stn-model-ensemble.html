@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Michael Matiu" />
+
+<meta name="date" content="2019-05-09" />
+
+<title>Extract series from an ensemble of RCMs for a station</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Extract series from an ensemble of RCMs for a station</h1>
+<h4 class="author">Michael Matiu</h4>
+<h4 class="date">2019-05-09</h4>
+
+
+
+<p>The goal: Extract temperature (tas) and precipitation (pr) of a single grid cell for the SMHI-RCA4 regional climate model: it will look at all available GCMs and we subset to historical, rcp45 and rcp85.</p>
+<p>The single grid cell will be the one which includes the station of Bolzano (Italy), which lies at 11.31 deg E and 46.5 deg N.</p>
+<p>First get inventory of all files.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(eurocordexr)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#&gt; Loading required package: data.table</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; Loading required package: lubridate</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#&gt; Attaching package: 'lubridate'</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#&gt; The following objects are masked from 'package:data.table':</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#&gt;     hour, isoweek, mday, minute, month, quarter, second, wday,</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#&gt;     week, yday, year</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#&gt; The following object is masked from 'package:base':</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#&gt;     date</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#&gt; Loading required package: magrittr</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#&gt; Loading required package: ncdf4</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#&gt; Loading required package: ncdf4.helpers</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">path_eurocordex &lt;-<span class="st"> &quot;/mnt/CEPH_BASEDATA/METEO/SCENARIO&quot;</span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">dat_inventory &lt;-<span class="st"> </span><span class="kw">get_inventory</span>(path_eurocordex)</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">dat_inventory_files &lt;-<span class="st"> </span><span class="kw">get_inventory</span>(path_eurocordex, <span class="dt">add_files =</span> T)</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co"># the inventory without files prints more nicely</span></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22">dat_inventory</a>
+<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">#&gt;       variable domain                   gcm     institute_rcm experiment</span></a>
+<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">#&gt;    1:      clt EUR-11 CNRM-CERFACS-CNRM-CM5 CLMcom-CCLM4-8-17 historical</span></a>
+<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="co">#&gt;    2:      clt EUR-11 CNRM-CERFACS-CNRM-CM5 CLMcom-CCLM4-8-17      rcp45</span></a>
+<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="co">#&gt;    3:      clt EUR-11 CNRM-CERFACS-CNRM-CM5 CLMcom-CCLM4-8-17      rcp85</span></a>
+<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="co">#&gt;    4:      clt EUR-11 CNRM-CERFACS-CNRM-CM5         SMHI-RCA4 historical</span></a>
+<a class="sourceLine" id="cb1-28" data-line-number="28"><span class="co">#&gt;    5:      clt EUR-11 CNRM-CERFACS-CNRM-CM5         SMHI-RCA4      rcp45</span></a>
+<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="co">#&gt;   ---                                                                   </span></a>
+<a class="sourceLine" id="cb1-30" data-line-number="30"><span class="co">#&gt; 1042:       ts EUR-11      MPI-M-MPI-ESM-LR  MPI-CSC-REMO2009      rcp85</span></a>
+<a class="sourceLine" id="cb1-31" data-line-number="31"><span class="co">#&gt; 1043:       ts EUR-11      MPI-M-MPI-ESM-LR  MPI-CSC-REMO2009      rcp85</span></a>
+<a class="sourceLine" id="cb1-32" data-line-number="32"><span class="co">#&gt; 1044:       ts EUR-11      MPI-M-MPI-ESM-LR         SMHI-RCA4 historical</span></a>
+<a class="sourceLine" id="cb1-33" data-line-number="33"><span class="co">#&gt; 1045:       ts EUR-11      MPI-M-MPI-ESM-LR         SMHI-RCA4      rcp45</span></a>
+<a class="sourceLine" id="cb1-34" data-line-number="34"><span class="co">#&gt; 1046:       ts EUR-11      MPI-M-MPI-ESM-LR         SMHI-RCA4      rcp85</span></a>
+<a class="sourceLine" id="cb1-35" data-line-number="35"><span class="co">#&gt;       ensemble downscale_realisation timefreq nn_files       years_total</span></a>
+<a class="sourceLine" id="cb1-36" data-line-number="36"><span class="co">#&gt;    1:   r1i1p1                    v1      day       12 19500101-20051231</span></a>
+<a class="sourceLine" id="cb1-37" data-line-number="37"><span class="co">#&gt;    2:   r1i1p1                    v1      day       19 20060101-21001231</span></a>
+<a class="sourceLine" id="cb1-38" data-line-number="38"><span class="co">#&gt;    3:   r1i1p1                    v1      day       19 20060101-21001231</span></a>
+<a class="sourceLine" id="cb1-39" data-line-number="39"><span class="co">#&gt;    4:   r1i1p1                    v1      day        8 19700101-20051231</span></a>
+<a class="sourceLine" id="cb1-40" data-line-number="40"><span class="co">#&gt;    5:   r1i1p1                    v1      day       19 20060101-21001231</span></a>
+<a class="sourceLine" id="cb1-41" data-line-number="41"><span class="co">#&gt;   ---                                                                   </span></a>
+<a class="sourceLine" id="cb1-42" data-line-number="42"><span class="co">#&gt; 1042:   r1i1p1                    v1      day       19 20060101-21001231</span></a>
+<a class="sourceLine" id="cb1-43" data-line-number="43"><span class="co">#&gt; 1043:   r2i1p1                    v1      day       19 20060101-21001231</span></a>
+<a class="sourceLine" id="cb1-44" data-line-number="44"><span class="co">#&gt; 1044:   r1i1p1                   v1a      day        8 19700101-20051231</span></a>
+<a class="sourceLine" id="cb1-45" data-line-number="45"><span class="co">#&gt; 1045:   r1i1p1                   v1a      day       19 20060101-21001231</span></a>
+<a class="sourceLine" id="cb1-46" data-line-number="46"><span class="co">#&gt; 1046:   r1i1p1                   v1a      day       19 20060101-21001231</span></a></code></pre></div>
+<p>Then we subset using data.table notation:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">dat_inventory_sub &lt;-<span class="st"> </span>dat_inventory[variable <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;tas&quot;</span>, <span class="st">&quot;pr&quot;</span>) <span class="op">&amp;</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">                                     </span>timefreq <span class="op">==</span><span class="st"> &quot;day&quot;</span> <span class="op">&amp;</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">                                     </span>institute_rcm <span class="op">==</span><span class="st"> &quot;SMHI-RCA4&quot;</span> <span class="op">&amp;</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">                                     </span>experiment <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;historical&quot;</span>, <span class="st">&quot;rcp45&quot;</span>, <span class="st">&quot;rcp85&quot;</span>)]</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co"># the inventory with files is needed later for data extraction</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">dat_inventory_files_sub &lt;-<span class="st"> </span>dat_inventory_files[variable <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;tas&quot;</span>, <span class="st">&quot;pr&quot;</span>) <span class="op">&amp;</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">                                     </span>timefreq <span class="op">==</span><span class="st"> &quot;day&quot;</span> <span class="op">&amp;</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">                                     </span>institute_rcm <span class="op">==</span><span class="st"> &quot;SMHI-RCA4&quot;</span> <span class="op">&amp;</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">                                     </span>experiment <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;historical&quot;</span>, <span class="st">&quot;rcp45&quot;</span>, <span class="st">&quot;rcp85&quot;</span>)]</a></code></pre></div>
+<p>Next compare the available model setups:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">dat_compare &lt;-<span class="st"> </span><span class="kw">compare_variables_in_inventory</span>(dat_inventory_sub, <span class="kw">c</span>(<span class="st">&quot;tas&quot;</span>, <span class="st">&quot;pr&quot;</span>))</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">print</span>(dat_compare)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;     domain                   gcm institute_rcm experiment ensemble</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt;  1: EUR-11 CNRM-CERFACS-CNRM-CM5     SMHI-RCA4 historical   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt;  2: EUR-11 CNRM-CERFACS-CNRM-CM5     SMHI-RCA4      rcp45   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt;  3: EUR-11 CNRM-CERFACS-CNRM-CM5     SMHI-RCA4      rcp85   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt;  4: EUR-11        ICHEC-EC-EARTH     SMHI-RCA4 historical  r12i1p1</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;  5: EUR-11        ICHEC-EC-EARTH     SMHI-RCA4      rcp45  r12i1p1</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;  6: EUR-11        ICHEC-EC-EARTH     SMHI-RCA4      rcp85  r12i1p1</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  7: EUR-11     IPSL-IPSL-CM5A-MR     SMHI-RCA4 historical   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  8: EUR-11     IPSL-IPSL-CM5A-MR     SMHI-RCA4      rcp45   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  9: EUR-11     IPSL-IPSL-CM5A-MR     SMHI-RCA4      rcp85   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; 10: EUR-11       MOHC-HadGEM2-ES     SMHI-RCA4 historical   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; 11: EUR-11       MOHC-HadGEM2-ES     SMHI-RCA4      rcp45   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; 12: EUR-11       MOHC-HadGEM2-ES     SMHI-RCA4      rcp85   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; 13: EUR-11      MPI-M-MPI-ESM-LR     SMHI-RCA4 historical   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; 14: EUR-11      MPI-M-MPI-ESM-LR     SMHI-RCA4      rcp45   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; 15: EUR-11      MPI-M-MPI-ESM-LR     SMHI-RCA4      rcp85   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; 16: EUR-11         NCC-NorESM1-M     SMHI-RCA4 historical   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; 17: EUR-11         NCC-NorESM1-M     SMHI-RCA4      rcp85   r1i1p1</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt;     downscale_realisation timefreq nn_files_pr nn_files_tas</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt;  1:                    v1      day           8            8</span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt;  2:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt;  3:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt;  4:                    v1      day           8            8</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt;  5:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt;  6:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt;  7:                    v1      day           8            8</span></a>
+<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt;  8:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt;  9:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co">#&gt; 10:                    v1      day           8            8</span></a>
+<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="co">#&gt; 11:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="co">#&gt; 12:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co">#&gt; 13:                   v1a      day           8            8</span></a>
+<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="co">#&gt; 14:                   v1a      day          19           19</span></a>
+<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="co">#&gt; 15:                   v1a      day          19           19</span></a>
+<a class="sourceLine" id="cb3-37" data-line-number="37"><span class="co">#&gt; 16:                    v1      day           8            8</span></a>
+<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="co">#&gt; 17:                    v1      day          19           19</span></a>
+<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="co">#&gt;        years_total_pr   years_total_tas all_nn_files_equal</span></a>
+<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="co">#&gt;  1: 19700101-20051231 19700101-20051231               TRUE</span></a>
+<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="co">#&gt;  2: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="co">#&gt;  3: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-43" data-line-number="43"><span class="co">#&gt;  4: 19700101-20051231 19700101-20051231               TRUE</span></a>
+<a class="sourceLine" id="cb3-44" data-line-number="44"><span class="co">#&gt;  5: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="co">#&gt;  6: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-46" data-line-number="46"><span class="co">#&gt;  7: 19700101-20051231 19700101-20051231               TRUE</span></a>
+<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="co">#&gt;  8: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="co">#&gt;  9: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="co">#&gt; 10: 19700101-20051230 19700101-20051230               TRUE</span></a>
+<a class="sourceLine" id="cb3-50" data-line-number="50"><span class="co">#&gt; 11: 20060101-20991130 20060101-20991130               TRUE</span></a>
+<a class="sourceLine" id="cb3-51" data-line-number="51"><span class="co">#&gt; 12: 20060101-20991230 20060101-20991230               TRUE</span></a>
+<a class="sourceLine" id="cb3-52" data-line-number="52"><span class="co">#&gt; 13: 19700101-20051231 19700101-20051231               TRUE</span></a>
+<a class="sourceLine" id="cb3-53" data-line-number="53"><span class="co">#&gt; 14: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-54" data-line-number="54"><span class="co">#&gt; 15: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-55" data-line-number="55"><span class="co">#&gt; 16: 19700101-20051231 19700101-20051231               TRUE</span></a>
+<a class="sourceLine" id="cb3-56" data-line-number="56"><span class="co">#&gt; 17: 20060101-21001231 20060101-21001231               TRUE</span></a>
+<a class="sourceLine" id="cb3-57" data-line-number="57"><span class="co">#&gt;     all_years_total_equal</span></a>
+<a class="sourceLine" id="cb3-58" data-line-number="58"><span class="co">#&gt;  1:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-59" data-line-number="59"><span class="co">#&gt;  2:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-60" data-line-number="60"><span class="co">#&gt;  3:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-61" data-line-number="61"><span class="co">#&gt;  4:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-62" data-line-number="62"><span class="co">#&gt;  5:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-63" data-line-number="63"><span class="co">#&gt;  6:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-64" data-line-number="64"><span class="co">#&gt;  7:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-65" data-line-number="65"><span class="co">#&gt;  8:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-66" data-line-number="66"><span class="co">#&gt;  9:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-67" data-line-number="67"><span class="co">#&gt; 10:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-68" data-line-number="68"><span class="co">#&gt; 11:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-69" data-line-number="69"><span class="co">#&gt; 12:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-70" data-line-number="70"><span class="co">#&gt; 13:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-71" data-line-number="71"><span class="co">#&gt; 14:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-72" data-line-number="72"><span class="co">#&gt; 15:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-73" data-line-number="73"><span class="co">#&gt; 16:                  TRUE</span></a>
+<a class="sourceLine" id="cb3-74" data-line-number="74"><span class="co">#&gt; 17:                  TRUE</span></a></code></pre></div>
+<p>Looks like it is a complete dataset. Now we are going to extract all the data for the grid cell in which the station lies.</p>
+<p>We go parallel, because it saves a lot of time (for the example here, we use 7 instead of 1 core).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># get parallel</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">library</span>(doParallel)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; Loading required package: foreach</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Loading required package: iterators</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Loading required package: parallel</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw">registerDoParallel</span>(parallel<span class="op">::</span><span class="kw">detectCores</span>() <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<p>The extraction of the data is enclosed in the following loop. It will create one file (.rds) per row in the inventory data. In this case it is one file per variable (tas, pr), model (GCM - RCM combination), and experiment (historical, rcp..). The data will be saved in a directory <code>data-rcm/[station-name]/[variable]</code>, which will be created if it does not exist. We will also, for illustration, measure the time it takes to extract all data.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># time the following loop</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">start_time &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co"># extract data and save files</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="kw">library</span>(foreach)</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">foreach</span>(</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">  <span class="dt">i_stn =</span> <span class="st">&quot;Bolzano&quot;</span>,</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  <span class="dt">i_lon =</span> <span class="fl">11.31</span>,</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="dt">i_lat =</span> <span class="fl">46.5</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">) <span class="op">%do%</span><span class="st"> </span>{</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">  </a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">  <span class="kw">foreach</span>(<span class="dt">i_nc =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(dat_inventory_files_sub), <span class="dt">.inorder =</span> F) <span class="op">%dopar%</span><span class="st"> </span>{</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">    </a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">    <span class="co"># create filename</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">    dat_inventory_files_sub[i_nc, <span class="kw">paste0</span>(<span class="co"># variable, &quot;_&quot;,</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17">                         gcm, <span class="st">&quot;_&quot;</span>,</a>
+<a class="sourceLine" id="cb5-18" data-line-number="18">                         institute_rcm, <span class="st">&quot;_&quot;</span>,</a>
+<a class="sourceLine" id="cb5-19" data-line-number="19">                         experiment, <span class="st">&quot;_&quot;</span>,</a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">                         ensemble, <span class="st">&quot;_&quot;</span>,</a>
+<a class="sourceLine" id="cb5-21" data-line-number="21">                         downscale_realisation, <span class="st">&quot;.rds&quot;</span>)] <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="st">      </span><span class="co"># pre-append path</span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="st">      </span><span class="kw">file.path</span>(<span class="st">&quot;data-rcm&quot;</span>, </a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">                i_stn, </a>
+<a class="sourceLine" id="cb5-25" data-line-number="25">                dat_inventory_files_sub[i_nc, variable], </a>
+<a class="sourceLine" id="cb5-26" data-line-number="26">                .) -&gt;<span class="st"> </span>file_to_save</a>
+<a class="sourceLine" id="cb5-27" data-line-number="27">    </a>
+<a class="sourceLine" id="cb5-28" data-line-number="28">    <span class="co"># create directory and skip if file already exists</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29">    <span class="cf">if</span>(<span class="op">!</span><span class="kw">dir.exists</span>(<span class="kw">dirname</span>(file_to_save))) <span class="kw">dir.create</span>(<span class="kw">dirname</span>(file_to_save), <span class="dt">recursive =</span> T)</a>
+<a class="sourceLine" id="cb5-30" data-line-number="30">    <span class="cf">if</span>(<span class="kw">file.exists</span>(file_to_save)) <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
+<a class="sourceLine" id="cb5-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb5-32" data-line-number="32">    <span class="co"># subloop to extract all data for a specific inventory row</span></a>
+<a class="sourceLine" id="cb5-33" data-line-number="33">    dat_nc &lt;-<span class="st"> </span><span class="kw">foreach</span>(</a>
+<a class="sourceLine" id="cb5-34" data-line-number="34">      <span class="dt">fn =</span> dat_inventory_files_sub[i_nc, <span class="kw">unlist</span>(list_files)],</a>
+<a class="sourceLine" id="cb5-35" data-line-number="35">      <span class="dt">.final =</span> rbindlist</a>
+<a class="sourceLine" id="cb5-36" data-line-number="36">    ) <span class="op">%do%</span><span class="st"> </span>{</a>
+<a class="sourceLine" id="cb5-37" data-line-number="37">      </a>
+<a class="sourceLine" id="cb5-38" data-line-number="38">      dat &lt;-<span class="st"> </span><span class="kw">rotpole_nc_point_to_dt</span>(<span class="dt">filename =</span> fn,</a>
+<a class="sourceLine" id="cb5-39" data-line-number="39">                                    <span class="dt">variable =</span> dat_inventory_files_sub[i_nc, variable],</a>
+<a class="sourceLine" id="cb5-40" data-line-number="40">                                    <span class="dt">point_lon =</span> i_lon,</a>
+<a class="sourceLine" id="cb5-41" data-line-number="41">                                    <span class="dt">point_lat =</span> i_lat,</a>
+<a class="sourceLine" id="cb5-42" data-line-number="42">                                    <span class="dt">interpolate_to_standard_calendar =</span> T,</a>
+<a class="sourceLine" id="cb5-43" data-line-number="43">                                    <span class="dt">verbose =</span> F)</a>
+<a class="sourceLine" id="cb5-44" data-line-number="44">      </a>
+<a class="sourceLine" id="cb5-45" data-line-number="45">      dat</a>
+<a class="sourceLine" id="cb5-46" data-line-number="46">      </a>
+<a class="sourceLine" id="cb5-47" data-line-number="47">      </a>
+<a class="sourceLine" id="cb5-48" data-line-number="48">    }</a>
+<a class="sourceLine" id="cb5-49" data-line-number="49">    </a>
+<a class="sourceLine" id="cb5-50" data-line-number="50">    <span class="kw">saveRDS</span>(dat_nc,</a>
+<a class="sourceLine" id="cb5-51" data-line-number="51">            <span class="dt">file =</span> file_to_save)</a>
+<a class="sourceLine" id="cb5-52" data-line-number="52">    </a>
+<a class="sourceLine" id="cb5-53" data-line-number="53">    <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
+<a class="sourceLine" id="cb5-54" data-line-number="54">  }</a>
+<a class="sourceLine" id="cb5-55" data-line-number="55">  </a>
+<a class="sourceLine" id="cb5-56" data-line-number="56">  <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
+<a class="sourceLine" id="cb5-57" data-line-number="57">}</a>
+<a class="sourceLine" id="cb5-58" data-line-number="58"><span class="co">#&gt; [[1]]</span></a>
+<a class="sourceLine" id="cb5-59" data-line-number="59"><span class="co">#&gt; NULL</span></a>
+<a class="sourceLine" id="cb5-60" data-line-number="60"></a>
+<a class="sourceLine" id="cb5-61" data-line-number="61"><span class="co"># how much time has passed?</span></a>
+<a class="sourceLine" id="cb5-62" data-line-number="62">end_time &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
+<a class="sourceLine" id="cb5-63" data-line-number="63"><span class="kw">print</span>(end_time <span class="op">-</span><span class="st"> </span>start_time)</a>
+<a class="sourceLine" id="cb5-64" data-line-number="64"><span class="co">#&gt; Time difference of 7.411127 mins</span></a></code></pre></div>
+<p>It took only approx. 8 minutes to extract all the data.</p>
+<p>The above function can also be adopted to loop over multiple stations, just giving in the first <code>foreach()</code> call vectors of <code>i_stn</code>, <code>i_lon</code>, and <code>i_lat</code> (which can also be columns from a data.frame/data.table).</p>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
