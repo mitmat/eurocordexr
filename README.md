@@ -7,16 +7,9 @@ Main components:
   - extract the whole array of a variable in long format
   - can deal with non-standard calendars (360, noleap) and interpolate them
   
-Since not public (yet), needs authentification to install:
+To install, use `devtools`:
 
-    library(devtools)
-    library(git2r)
-    library(getPass)
-
-    username <- "Your GITLAB username" # typically EURAC email
-
-    devtools::install_git("https://gitlab.inf.unibz.it/REMSEN/eurocordexr", 
-                          credentials = git2r::cred_user_pass(username, getPass::getPass()))
+    devtools::install_git("https://gitlab.inf.unibz.it/earth_observation_public/eurocordexr")
 
 
 Requires the following packages (which should be installed automatically with above):
@@ -26,3 +19,6 @@ Requires the following packages (which should be installed automatically with ab
     library(magrittr)
     library(ncdf4)
     library(ncdf4.helpers)
+    
+Some documentation can be found in the `doc/` subfolder. To view the HTML files you may need to download the files (and not view them in gitlab).    
+
