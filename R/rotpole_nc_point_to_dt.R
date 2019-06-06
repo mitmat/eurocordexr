@@ -78,16 +78,21 @@ rotpole_nc_point_to_dt <- function(filename,
   }
 
 
-  values <- nc.get.var.subset.by.axes(ncobj,
-                                      variable,
-                                      list(X = cell_xy[1], Y = cell_xy[2]))
+  values <- as.vector(nc.get.var.subset.by.axes(ncobj,
+                                                variable,
+                                                list(X = cell_xy[1], Y = cell_xy[2])))
 
 
   times <- nc.get.time.series(ncobj, variable)
 
-  # modification for non-standard calendars
-  if(! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
+  if(all(is.na(times))){
 
+    if(verbose) cat("No time information found in nc file.\n")
+    dates <- NA
+
+  } else if(! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
+
+    # modification for non-standard calendars
     if(verbose) cat("Non-standard calendar found:", attr(times, "cal"), "\n")
 
     if(interpolate_to_standard_calendar){
