@@ -73,7 +73,12 @@ nc_grid_to_dt <- function(filename,
 
   times <- nc.get.time.series(ncobj, variable)
 
-  if(! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
+  if(all(is.na(times))){
+
+    if(verbose) cat("No time information found in nc file.\n")
+    dates <- NA
+
+  } else if(! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
 
     if(verbose) cat("Non-standard calendar found:", attr(times, "cal"), "\n")
 
@@ -107,7 +112,9 @@ nc_grid_to_dt <- function(filename,
     setnames(dat, c("x", "y"), dimnames[1:2])
   }
 
-  if(interpolate_to_standard_calendar & ! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
+  if(!all(is.na(times)) &&
+     interpolate_to_standard_calendar &&
+     ! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
 
     if(verbose) cat("Interpolating to standard calendar.\n")
 
