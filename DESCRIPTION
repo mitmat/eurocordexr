@@ -1,7 +1,7 @@
 Package: eurocordexr
 Type: Package
 Title: Makes it easier to work with daily netcdf from EURO-CORDEX RCMs
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Michael", "Matiu", email = "michael.matiu@eurac.edu",
                   role = c("aut", "cre"))
 Maintainer: Michael Matiu <michael.matiu@eurac.edu>
