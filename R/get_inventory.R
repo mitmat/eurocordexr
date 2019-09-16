@@ -11,7 +11,8 @@
 #'
 #' @return A data.table with the inventory information.
 #'
-#' @seealso \code{\link{compare_variables_in_inventory}} for further comparing the results.
+#' @seealso \code{\link{compare_variables_in_inventory}} for further comparing the
+#'   results, and \code{\link{check_inventory}} for performing some checks.
 #'
 #' @export
 #'

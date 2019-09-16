@@ -34,5 +34,6 @@ print(dat_file)
 }
 }
 \seealso{
-\code{\link{compare_variables_in_inventory}} for further comparing the results.
+\code{\link{compare_variables_in_inventory}} for further comparing the
+  results, and \code{\link{check_inventory}} for performing some checks.
 }
