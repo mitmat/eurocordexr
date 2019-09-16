@@ -21,15 +21,21 @@
 #' }
 check_inventory <- function(data_inventory){
 
+  dat_inv <- copy(data_inventory)
+
+  # remove list_files column for nicer printing
+  if("list_files" %in% names(dat_inv)) dat_inv[, list_files := NULL]
+
+
   # start
   cat("Checks performed:", "\n")
   cat("------------------------------------------------------\n")
   cat("------------------------------------------------------\n")
 
   # check for mutliple timefreq
-  test_timefreq <- length(unique(data_inventory$timefreq)) > 1
+  test_timefreq <- length(unique(dat_inv$timefreq)) > 1
   if(test_timefreq) {
-    cat("Multiple time frequencies detected:", unique(data_inventory$timefreq), "\n")
+    cat("Multiple time frequencies detected:", unique(dat_inv$timefreq), "\n")
   } else {
     cat("No multiple time frequencies.", "\n")
   }
@@ -37,9 +43,9 @@ check_inventory <- function(data_inventory){
   cat("------------------------------------------------------\n")
 
   # check for mutliple domains
-  test_domain <- length(unique(data_inventory$domain)) > 1
+  test_domain <- length(unique(dat_inv$domain)) > 1
   if(test_domain) {
-    cat("Multiple domains detected:", unique(data_inventory$domain), "\n")
+    cat("Multiple domains detected:", unique(dat_inv$domain), "\n")
   } else {
     cat("No multiple domains.", "\n")
   }
@@ -47,14 +53,14 @@ check_inventory <- function(data_inventory){
   cat("------------------------------------------------------\n")
 
   # check for multiple ensembles
-  dat_mult_ens <- data_inventory[, .N, .(variable, domain, gcm, institute_rcm, experiment,
+  dat_mult_ens <- dat_inv[, .N, .(variable, domain, gcm, institute_rcm, experiment,
                                   downscale_realisation, timefreq)]
   dat_mult_ens <- dat_mult_ens[N > 1]
   n_mult_ens <- nrow(dat_mult_ens)
   if(n_mult_ens > 0){
     for(i in 1:n_mult_ens){
       cat("Multiple ensembles in", i, "of", n_mult_ens, ":", "\n")
-      print(merge(dat_mult_ens[i], data_inventory,
+      print(merge(dat_mult_ens[i], dat_inv,
                   by = c("variable", "domain", "gcm", "institute_rcm",
                          "experiment", "downscale_realisation", "timefreq")))
       cat("------------------------------------------------------\n")
@@ -66,14 +72,14 @@ check_inventory <- function(data_inventory){
   cat("------------------------------------------------------\n")
 
   # check for multiple downscale_realisation
-  dat_mult_ds <- data_inventory[, .N, .(variable, domain, gcm, institute_rcm, experiment,
+  dat_mult_ds <- dat_inv[, .N, .(variable, domain, gcm, institute_rcm, experiment,
                                  ensemble, timefreq)]
   dat_mult_ds <- dat_mult_ds[N > 1]
   n_mult_ds <- nrow(dat_mult_ds)
   if(n_mult_ds > 0){
     for(i in 1:n_mult_ds){
       cat("Multiple downscale realisation in", i, "of", n_mult_ds, ":", "\n")
-      print(merge(dat_mult_ds[i], data_inventory,
+      print(merge(dat_mult_ds[i], dat_inv,
                   by = c("variable", "domain", "gcm", "institute_rcm",
                          "experiment", "ensemble", "timefreq")))
       cat("------------------------------------------------------\n")
@@ -85,11 +91,11 @@ check_inventory <- function(data_inventory){
   cat("------------------------------------------------------\n")
 
   # check for complete combinations for all variables
-  variables <- unique(data_inventory$variable)
+  variables <- unique(dat_inv$variable)
   if(length(variables) == 1){
     cat("Only one variable:", variables)
   } else {
-    dat_comp <- compare_variables_in_inventory(data_inventory, variables)
+    dat_comp <- compare_variables_in_inventory(dat_inv, variables)
     dat_comp_mult <- dat_comp[all_nn_files_equal == FALSE | all_years_total_equal == FALSE]
     if(nrow(dat_comp_mult) > 0){
       cat("Following models do not have all variables:", "\n")
