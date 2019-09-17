@@ -11,7 +11,9 @@ check_inventory(data_inventory)
 \code{\link{get_inventory}}.}
 }
 \value{
-Nothing, only used for side-effects (printing).
+Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
+  Only the checks for multiple values are taken into account, the one for completeness
+  of variables is not.
 }
 \description{
 Some simple checks for multiple time frequencies, domains, ensembles,

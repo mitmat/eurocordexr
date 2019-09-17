@@ -9,7 +9,11 @@
 #' @param data_inventory A data.table as resulting from
 #'   \code{\link{get_inventory}}.
 #'
-#' @return Nothing, only used for side-effects (printing).
+#' @return Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
+#'   Only the checks for multiple values are taken into account, the one for completeness
+#'   of variables is not.
+#'
+#'
 #' @export
 #'
 #' @examples
@@ -57,7 +61,8 @@ check_inventory <- function(data_inventory){
                                   downscale_realisation, timefreq)]
   dat_mult_ens <- dat_mult_ens[N > 1]
   n_mult_ens <- nrow(dat_mult_ens)
-  if(n_mult_ens > 0){
+  test_mult_ens <- n_mult_ens > 0
+  if(test_mult_ens){
     for(i in 1:n_mult_ens){
       cat("Multiple ensembles in", i, "of", n_mult_ens, ":", "\n")
       print(merge(dat_mult_ens[i], dat_inv,
@@ -76,7 +81,8 @@ check_inventory <- function(data_inventory){
                                  ensemble, timefreq)]
   dat_mult_ds <- dat_mult_ds[N > 1]
   n_mult_ds <- nrow(dat_mult_ds)
-  if(n_mult_ds > 0){
+  test_mult_ds <- n_mult_ds > 0
+  if(test_mult_ds){
     for(i in 1:n_mult_ds){
       cat("Multiple downscale realisation in", i, "of", n_mult_ds, ":", "\n")
       print(merge(dat_mult_ds[i], dat_inv,
@@ -93,11 +99,13 @@ check_inventory <- function(data_inventory){
   # check for complete combinations for all variables
   variables <- unique(dat_inv$variable)
   if(length(variables) == 1){
-    cat("Only one variable:", variables)
+    cat("Only one variable:", variables, "\n")
+    test_variable <- F
   } else {
     dat_comp <- compare_variables_in_inventory(dat_inv, variables)
     dat_comp_mult <- dat_comp[all_nn_files_equal == FALSE | all_years_total_equal == FALSE]
-    if(nrow(dat_comp_mult) > 0){
+    test_variable <- nrow(dat_comp_mult) > 0
+    if(test_variable){
       cat("Following models do not have all variables:", "\n")
       print(dat_comp_mult)
     } else {
@@ -111,6 +119,9 @@ check_inventory <- function(data_inventory){
   cat("Finished checks.", "\n")
   cat("------------------------------------------------------\n")
   cat("------------------------------------------------------\n")
-  invisible(NULL)
+
+  # return invisibly TRUE if all tests passed, FALSE otherwise if one failed
+  out_test <- !(test_timefreq | test_domain | test_mult_ens | test_mult_ds)
+  invisible(out_test)
 
 }
