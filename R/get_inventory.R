@@ -30,20 +30,25 @@
 get_inventory <- function(path,
                           add_files = F){
 
-  all_files_fullpath <- list.files(path,
-                                   pattern = ".nc$",
-                                   recursive = T,
-                                   full.names = T)
+  all_files_fullpath <- fs::dir_ls(path,
+                                   regexp = ".nc$",
+                                   recurse = T)
 
-  all_files_base <- basename(all_files_fullpath)
+  all_files_base <- fs::path_file(all_files_fullpath)
 
   # create info data
-  data.table(fn = all_files_base) %>%
-    .[, tstrsplit(fn, "_")] %>%
-    .[, V9 := gsub(".nc", "", V9)] -> dat_info
+  data.table(fn = path_ext_remove(all_files_base)) %>%
+    .[, tstrsplit(fn, "_")] -> dat_info
 
-  setnames(dat_info, c("variable", "domain", "gcm", "experiment","ensemble",
-                       "institute_rcm", "downscale_realisation", "timefreq", "years"))
+  # add years column (V9), if it does not exist, as e.g. for OROG
+  if(! "V9" %in% names(dat_info)){
+    dat_info[, V9 := NA_character_]
+  }
+
+  setnames(dat_info,
+           old = paste0("V", 1:9),
+           new = c("variable", "domain", "gcm", "experiment","ensemble",
+                   "institute_rcm", "downscale_realisation", "timefreq", "years"))
 
   dat_info[, file_fullpath := all_files_fullpath]
 

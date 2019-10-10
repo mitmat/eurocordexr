@@ -15,11 +15,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    data.table,
-    lubridate,
-    magrittr,
-    ncdf4,
-    ncdf4.helpers
+    fs
 Depends: 
     data.table,
     lubridate,
