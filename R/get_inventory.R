@@ -37,7 +37,7 @@ get_inventory <- function(path,
   all_files_base <- fs::path_file(all_files_fullpath)
 
   # create info data
-  data.table(fn = path_ext_remove(all_files_base)) %>%
+  data.table(fn = fs::path_ext_remove(all_files_base)) %>%
     .[, tstrsplit(fn, "_")] -> dat_info
 
   # add years column (V9), if it does not exist, as e.g. for OROG
