@@ -31,7 +31,7 @@ get_inventory <- function(path,
                           add_files = F){
 
   all_files_fullpath <- fs::dir_ls(path,
-                                   regexp = ".nc$",
+                                   regexp = "[.]nc$",
                                    recurse = T)
 
   all_files_base <- fs::path_file(all_files_fullpath)
