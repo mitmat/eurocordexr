@@ -6,7 +6,8 @@
 data.table}
 \usage{
 rotpole_nc_point_to_dt(filename, variable, point_lon, point_lat,
-  interpolate_to_standard_calendar = F, verbose = F)
+  interpolate_to_standard_calendar = F, verbose = F,
+  add_grid_coord = F)
 }
 \arguments{
 \item{filename}{Complete path to .nc file.}
@@ -23,6 +24,9 @@ rotpole_nc_point_to_dt(filename, variable, point_lon, point_lat,
 calendar.}
 
 \item{verbose}{Boolean, if \code{TRUE}, will print more information.}
+
+\item{add_grid_coord}{Boolean, if \code{TRUE}, will add columns to the result
+which give the longitude and latitude of the underlying grid.}
 }
 \value{
 A \code{\link[data.table]{data.table}} with two columns: the dates in
@@ -30,7 +34,8 @@ A \code{\link[data.table]{data.table}} with two columns: the dates in
   date column is of class \code{\link{Date}}, unless the .nc
   file has a non-standard calendar (360, noleap) and
   \code{interpolate_to_standard_calendar} is set to \code{FALSE}, in which it
-  will be character.
+  will be character. If \code{add_grid_coord} is set to \code{TRUE}, then
+  two more columns named grid_lon and grid_lat.
 }
 \description{
 Creates a \code{\link[data.table]{data.table}} from a rotated pole netcdf (as

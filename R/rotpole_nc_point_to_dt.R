@@ -19,13 +19,16 @@
 #'   \code{\link{map_non_standard_calendar}} to interpolate values to a standard
 #'   calendar.
 #' @param verbose Boolean, if \code{TRUE}, will print more information.
+#' @param add_grid_coord Boolean, if \code{TRUE}, will add columns to the result
+#'   which give the longitude and latitude of the underlying grid.
 #'
 #' @return A \code{\link[data.table]{data.table}} with two columns: the dates in
 #'   date, and the values in a variable named after input \code{variable}. The
 #'   date column is of class \code{\link{Date}}, unless the .nc
 #'   file has a non-standard calendar (360, noleap) and
 #'   \code{interpolate_to_standard_calendar} is set to \code{FALSE}, in which it
-#'   will be character.
+#'   will be character. If \code{add_grid_coord} is set to \code{TRUE}, then
+#'   two more columns named grid_lon and grid_lat.
 #'
 #' @export
 #'
@@ -52,7 +55,8 @@ rotpole_nc_point_to_dt <- function(filename,
                                    point_lon,
                                    point_lat,
                                    interpolate_to_standard_calendar = F,
-                                   verbose = F){
+                                   verbose = F,
+                                   add_grid_coord = F){
 
   ncobj <- nc_open(filename,
                    readunlim = F)
@@ -124,6 +128,12 @@ rotpole_nc_point_to_dt <- function(filename,
   dat <- data.table(date = dates,
                     value = values)
   setnames(dat, "value", variable)
+
+  if(add_grid_coord){
+    dat[, ":="(grid_lon = grid_lon[cell_xy],
+               grid_lat = grid_lat[cell_xy])]
+  }
+
 
   return(dat)
 }
