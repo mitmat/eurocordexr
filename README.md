@@ -1,5 +1,5 @@
 A package to make life easier working with daily netcdf files from the 
-EURO-CORDEX RCMs. Relies on data.table to do the heavy data lifting.
+EURO-CORDEX RCMs. Relies on `data.table` to do the heavy data lifting.
 
 Main components:
 
@@ -9,7 +9,7 @@ Main components:
   
 To install, use `devtools`:
 
-    devtools::install_git("https://gitlab.inf.unibz.it/earth_observation_public/eurocordexr")
+    devtools::install_github("mitmat/eurocordexr")
 
 
 Requires the following packages (which should be installed automatically with above):
