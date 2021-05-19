@@ -19,6 +19,7 @@
 #' @import data.table
 #' @importFrom magrittr %>%
 #' @import PCICt
+#' @import lubridate
 #'
 #' @examples
 #' \dontrun{
@@ -37,12 +38,12 @@ map_non_standard_calendar <- function(times){
   dates_pcict %>%
     min %>%
     as.character %>%
-    lubridate::ymd() -> date_min
+    ymd() -> date_min
 
   dates_pcict %>%
     max %>%
     as.character %>%
-    lubridate::ymd() -> date_max
+    ymd() -> date_max
 
   # if last day of year is Dec 30, make it Dec 31
   if(month(date_max) == 12 & day(date_max) == 30){
