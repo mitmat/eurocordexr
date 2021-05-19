@@ -4,8 +4,14 @@
 \alias{nc_grid_to_dt}
 \title{Convert a netcdf array to long format as data.table}
 \usage{
-nc_grid_to_dt(filename, variable, icell_raster_pkg = T, add_xy = F,
-  interpolate_to_standard_calendar = F, verbose = F)
+nc_grid_to_dt(
+  filename,
+  variable,
+  icell_raster_pkg = T,
+  add_xy = F,
+  interpolate_to_standard_calendar = F,
+  verbose = F
+)
 }
 \arguments{
 \item{filename}{Complete path to .nc file.}

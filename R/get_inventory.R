@@ -16,6 +16,9 @@
 #'
 #' @export
 #'
+#' @import data.table
+#' @importFrom magrittr %>%
+#'
 #' @examples
 #' \dontrun{
 #'
@@ -58,8 +61,8 @@ get_inventory <- function(path,
 
   # prep dates
   dat_info[, c("date_start", "date_end") := tstrsplit(period, "-")]
-  dat_info[, date_start := ymd(date_start)]
-  dat_info[, date_end := ymd(date_end)]
+  dat_info[, date_start := lubridate::ymd(date_start)]
+  dat_info[, date_end := lubridate::ymd(date_end)]
 
   # helper fun to check for complete period
   f_date_complete <- function(date_start, date_end){

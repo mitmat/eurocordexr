@@ -5,9 +5,15 @@
 \title{Extract time series of a single grid cell of a rot-pole daily netcdf to
 data.table}
 \usage{
-rotpole_nc_point_to_dt(filename, variable, point_lon, point_lat,
-  interpolate_to_standard_calendar = F, verbose = F,
-  add_grid_coord = F)
+rotpole_nc_point_to_dt(
+  filename,
+  variable,
+  point_lon,
+  point_lat,
+  interpolate_to_standard_calendar = F,
+  verbose = F,
+  add_grid_coord = F
+)
 }
 \arguments{
 \item{filename}{Complete path to .nc file.}

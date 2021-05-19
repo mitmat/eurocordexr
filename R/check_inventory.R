@@ -16,6 +16,9 @@
 #'
 #' @export
 #'
+#' @import data.table
+#' @importFrom magrittr %>%
+#'
 #' @examples
 #' \dontrun{
 #'

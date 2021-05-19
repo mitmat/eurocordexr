@@ -32,6 +32,12 @@
 #'
 #' @export
 #'
+#' @import data.table
+#' @importFrom magrittr %>%
+#' @import PCICt
+#' @import ncdf4
+#' @import ncdf4.helpers
+#'
 #' @examples
 #' \dontrun{
 #' # data are from EURO-CORDEX
