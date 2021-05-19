@@ -40,7 +40,7 @@ get_inventory <- function(path,
   data.table(fn = fs::path_ext_remove(all_files_base)) %>%
     .[, tstrsplit(fn, "_")] -> dat_info
 
-  # add years column (V9), if it does not exist, as e.g. for OROG
+  # add period column (V9), if it does not exist, as e.g. for OROG
   if(! "V9" %in% names(dat_info)){
     dat_info[, V9 := NA_character_]
   }
@@ -48,18 +48,58 @@ get_inventory <- function(path,
   setnames(dat_info,
            old = paste0("V", 1:9),
            new = c("variable", "domain", "gcm", "experiment","ensemble",
-                   "institute_rcm", "downscale_realisation", "timefreq", "years"))
+                   "institute_rcm", "downscale_realisation", "timefreq", "period"))
 
+  # check for errors in period encoding
+  dat_info[period == ensemble, period := NA]
+
+  # add file
   dat_info[, file_fullpath := all_files_fullpath]
+
+  # prep dates
+  dat_info[, c("date_start", "date_end") := tstrsplit(period, "-")]
+  dat_info[, date_start := ymd(date_start)]
+  dat_info[, date_end := ymd(date_end)]
+
+  # helper fun to check for complete period
+  f_date_complete <- function(date_start, date_end){
+
+    if(all(is.na(date_start))) return(NA)
+
+    # 360 calendar adjustment
+    lgl_check <- month(date_end) == 12 & day(date_end) == 30
+    day(date_end[lgl_check]) <- 31
+
+    mapply(seq, date_start, date_end, by = "day") %>%
+      unlist %>%
+      sort %>%
+      unique %>%
+      diff %>%
+      equals(1) %>%
+      all
+
+  }
+
+  f_sim_years <- function(date_start, date_end){
+
+    if(all(is.na(date_start))) return(NA)
+
+    mapply(seq, year(date_start), year(date_end), SIMPLIFY = F) %>%
+      unlist %>%
+      unique %>%
+      length
+
+  }
 
 
   # get unique models
   dat_info_summary <- dat_info[,
                                .(nn_files = .N,
-                                 list_files = list(file_fullpath),
-                                 years_total = paste0(.SD[1, years %>% strsplit("-") %>% .[[1]] %>% .[1]],
-                                                      "-",
-                                                      .SD[.N, years %>% strsplit("-") %>% .[[1]] %>% .[2]])),
+                                 date_start = min(date_start),
+                                 date_end = max(date_end),
+                                 total_simulation_years = f_sim_years(date_start, date_end),
+                                 period_complete = f_date_complete(date_start, date_end),
+                                 list_files = list(file_fullpath)),
                                keyby = .(variable, domain, gcm, institute_rcm, experiment,
                                          ensemble, downscale_realisation, timefreq)]
 
