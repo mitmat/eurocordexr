@@ -18,7 +18,7 @@
 #'
 #' @import data.table
 #' @importFrom magrittr %>%
-#' @import lubridate
+#' @importFrom lubridate ymd day day<-
 #'
 #'
 #' @examples
@@ -87,7 +87,7 @@ get_inventory <- function(path,
 
   f_sim_years <- function(date_start, date_end){
 
-    if(all(is.na(date_start))) return(NA)
+    if(all(is.na(date_start))) return(NA_integer_)
 
     mapply(seq, year(date_start), year(date_end), SIMPLIFY = F) %>%
       unlist %>%

@@ -19,7 +19,7 @@
 #' @import data.table
 #' @importFrom magrittr %>%
 #' @import PCICt
-#' @import lubridate
+#' @importFrom lubridate ymd day day<-
 #'
 #' @examples
 #' \dontrun{
