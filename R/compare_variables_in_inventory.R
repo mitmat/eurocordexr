@@ -7,7 +7,8 @@
 #'
 #' @param data_inventory A data.table as resulting from
 #'   \code{\link{get_inventory}}.
-#' @param vars Character vector of variables to compare.
+#' @param vars Character vector of variables to compare. If \code{NULL}, will use
+#'   all variables in \code{data_inventory}.
 #'
 #' @return The casted data.table with boolean columns if all years and number of
 #'   files are equal for all variables.
@@ -24,7 +25,7 @@
 #' dat <- get_inventory(path)
 #' dat_compare <- compare_variables_in_inventory(dat, c("tas","rsds","pr"))
 #' }
-compare_variables_in_inventory <- function(data_inventory, vars){
+compare_variables_in_inventory <- function(data_inventory, vars = NULL){
 
   dat <- copy(data_inventory)
 
@@ -32,15 +33,19 @@ compare_variables_in_inventory <- function(data_inventory, vars){
     dat[, list_files := NULL]
   }
 
+  if(is.null(vars)) vars <- unique(dat$variable)
+
+  # remove some columns for casting
+  dat[, ":="(nn_files = NULL, period_contiguous = NULL, date_end = NULL)]
   dat[variable %in% vars] %>%
-    dcast(... ~ variable, value.var = c("nn_files", "years_total")) -> dat_compare
+    dcast(... ~ variable, value.var = c("date_start", "total_simulation_years")) -> dat_compare
 
   dat_compare[,
-              all_nn_files_equal := apply(as.matrix(.SD), 1, function(x) length(unique(x)) == 1),
-              .SDcols = patterns("nn_files")]
+              all_date_start_equal := apply(as.matrix(.SD), 1, function(x) length(unique(x)) == 1),
+              .SDcols = patterns("date_start")]
   dat_compare[,
-              all_years_total_equal := apply(as.matrix(.SD), 1, function(x) length(unique(x)) == 1),
-              .SDcols = patterns("years_total")]
+              all_years_equal := apply(as.matrix(.SD), 1, function(x) length(unique(x)) == 1),
+              .SDcols = patterns("total_simulation_years")]
 
   dat_compare
 

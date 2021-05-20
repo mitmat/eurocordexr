@@ -66,7 +66,7 @@ get_inventory <- function(path,
   dat_info[, date_start := ymd(date_start)]
   dat_info[, date_end := ymd(date_end)]
 
-  # helper fun to check for complete period
+  # helper fun to check for complete contiguous period
   f_date_complete <- function(date_start, date_end){
 
     if(all(is.na(date_start))) return(NA)
@@ -103,7 +103,7 @@ get_inventory <- function(path,
                                  date_start = min(date_start),
                                  date_end = max(date_end),
                                  total_simulation_years = f_sim_years(date_start, date_end),
-                                 period_complete = f_date_complete(date_start, date_end),
+                                 period_contiguous = f_date_complete(date_start, date_end),
                                  list_files = list(file_fullpath)),
                                keyby = .(variable, domain, gcm, institute_rcm, experiment,
                                          ensemble, downscale_realisation, timefreq)]

@@ -4,13 +4,14 @@
 \alias{compare_variables_in_inventory}
 \title{Compare an EURO-CORDEX inventory for different variables}
 \usage{
-compare_variables_in_inventory(data_inventory, vars)
+compare_variables_in_inventory(data_inventory, vars = NULL)
 }
 \arguments{
 \item{data_inventory}{A data.table as resulting from
 \code{\link{get_inventory}}.}
 
-\item{vars}{Character vector of variables to compare.}
+\item{vars}{Character vector of variables to compare. If \code{NULL}, will use
+all variables in \code{data_inventory}.}
 }
 \value{
 The casted data.table with boolean columns if all years and number of
