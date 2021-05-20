@@ -1,13 +1,28 @@
 #' Perform some checks on the inventory
 #'
 #' Some simple checks for multiple time frequencies, domains, ensembles,
-#' and downscale realisations. Also runs \code{\link{compare_variables_in_inventory}}
+#' downscale realisations, and completeness of simulation periods.
+#' Can also run \code{\link{compare_variables_in_inventory}}
 #' to check for completeness of variables for all models. These checks are meant
 #' as guides only, since one might not wish multiple elements of the above for
 #' climate model ensemble assessments.
 #'
+#' The checks are \itemize{
+#' \item for multiple time frequency (day, month, ...)
+#' \item for multiple domains (EUR-11, EUR-44, ...)
+#' \item for multiple ensembles (r1i1p1, r2i1p1, ...)
+#' \item for multiple downscale realisations (v1, v2, ..)
+#' \item for complete periods of simulations: historical usually goes approx.
+#' from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
+#' because it has very heterogeneous periods
+#' \item that all variables (tas, pr, ...) are available for all models
+#' }
+#'
+#'
 #' @param data_inventory A data.table as resulting from
 #'   \code{\link{get_inventory}}.
+#' @param check_vars Boolean, if \code{TRUE}, runs \code{\link{compare_variables_in_inventory}}
+#'  to check if all variables are availabe in all models.
 #'
 #' @return Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
 #'   Only the checks for multiple values are taken into account, the one for completeness
@@ -26,7 +41,8 @@
 #' dat <- get_inventory(path)
 #' check_inventory(dat)
 #' }
-check_inventory <- function(data_inventory){
+check_inventory <- function(data_inventory,
+                            check_vars = F){
 
   dat_inv <- copy(data_inventory)
 
@@ -40,9 +56,11 @@ check_inventory <- function(data_inventory){
   cat("------------------------------------------------------\n")
 
   # check for mutliple timefreq
-  test_timefreq <- length(unique(dat_inv$timefreq)) > 1
+  timefreqs <- unique(dat_inv$timefreq)
+  timefreqs <- timefreqs[timefreqs != "fx"]
+  test_timefreq <- length(timefreqs) > 1
   if(test_timefreq) {
-    cat("Multiple time frequencies detected:", unique(dat_inv$timefreq), "\n")
+    cat("Multiple time frequencies detected:", timefreqs, "\n")
   } else {
     cat("No multiple time frequencies.", "\n")
   }
@@ -99,24 +117,51 @@ check_inventory <- function(data_inventory){
   }
   cat("------------------------------------------------------\n")
 
-  # check for complete combinations for all variables
-  variables <- unique(dat_inv$variable)
-  if(length(variables) == 1){
-    cat("Only one variable:", variables, "\n")
-    test_variable <- F
+
+  # check for complete periods ~1950/70-2005 and ~2006-2100
+  dat_period_complete <- rbind(
+    dat_inv[experiment == "historical" & !is.na(date_start) &
+              !(year(date_start) %in% 1948:1951 &
+                  total_simulation_years >= 54) &
+              !(year(date_start) %in% c(1970) &
+                  total_simulation_years >= 36)],
+    dat_inv[startsWith(experiment, "rcp") & !is.na(date_start) &
+              !(year(date_start) %in% c(2005, 2006) &
+                  total_simulation_years >= 93)]
+  )
+  if(nrow(dat_period_complete) == 0){
+    cat("All historical and rcp simulations have complete periods.\n")
+    test_complete_period <- F
   } else {
-    dat_comp <- compare_variables_in_inventory(dat_inv, variables)
-    dat_comp_mult <- dat_comp[all_nn_files_equal == FALSE | all_years_total_equal == FALSE]
-    test_variable <- nrow(dat_comp_mult) > 0
-    if(test_variable){
-      cat("Following models do not have all variables:", "\n")
-      print(dat_comp_mult)
-    } else {
-      cat("All variables present in all models.", "\n")
-    }
+    cat("Following model runs do not have complete periods:", "\n")
+    print(dat_period_complete)
+    test_complete_period <- T
   }
   cat("------------------------------------------------------\n")
   cat("------------------------------------------------------\n")
+
+
+  # check for complete combinations for all variables
+  if(check_vars){
+    variables <- unique(dat_inv$variable)
+    if(length(variables) == 1){
+      cat("Only one variable:", variables, "\n")
+      test_variable <- F
+    } else {
+      dat_comp <- compare_variables_in_inventory(dat_inv, variables)
+      dat_comp_mult <- dat_comp[all_date_start_equal == FALSE | all_years_equal == FALSE]
+      test_variable <- nrow(dat_comp_mult) > 0
+      if(test_variable){
+        cat("Following models do not have all variables:", "\n")
+        print(dat_comp_mult)
+      } else {
+        cat("All variables present in all models.", "\n")
+      }
+    }
+    cat("------------------------------------------------------\n")
+    cat("------------------------------------------------------\n")
+  }
+
 
   # end
   cat("Finished checks.", "\n")
@@ -124,7 +169,9 @@ check_inventory <- function(data_inventory){
   cat("------------------------------------------------------\n")
 
   # return invisibly TRUE if all tests passed, FALSE otherwise if one failed
-  out_test <- !(test_timefreq | test_domain | test_mult_ens | test_mult_ds)
+  out_test <- !(test_timefreq | test_domain |
+                  test_mult_ens | test_mult_ds |
+                  test_complete_period)
   invisible(out_test)
 
 }

@@ -4,11 +4,14 @@
 \alias{check_inventory}
 \title{Perform some checks on the inventory}
 \usage{
-check_inventory(data_inventory)
+check_inventory(data_inventory, check_vars = F)
 }
 \arguments{
 \item{data_inventory}{A data.table as resulting from
 \code{\link{get_inventory}}.}
+
+\item{check_vars}{Boolean, if \code{TRUE}, runs \code{\link{compare_variables_in_inventory}}
+to check if all variables are availabe in all models.}
 }
 \value{
 Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
@@ -17,10 +20,23 @@ Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
 }
 \description{
 Some simple checks for multiple time frequencies, domains, ensembles,
-and downscale realisations. Also runs \code{\link{compare_variables_in_inventory}}
+downscale realisations, and completeness of simulation periods.
+Can also run \code{\link{compare_variables_in_inventory}}
 to check for completeness of variables for all models. These checks are meant
 as guides only, since one might not wish multiple elements of the above for
 climate model ensemble assessments.
+}
+\details{
+The checks are \itemize{
+\item for multiple time frequency (day, month, ...)
+\item for multiple domains (EUR-11, EUR-44, ...)
+\item for multiple ensembles (r1i1p1, r2i1p1, ...)
+\item for multiple downscale realisations (v1, v2, ..)
+\item for complete periods of simulations: historical usually goes approx.
+from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
+because it has very heterogeneous periods
+\item that all variables (tas, pr, ...) are available for all models
+}
 }
 \examples{
 \dontrun{
