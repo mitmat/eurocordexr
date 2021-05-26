@@ -18,8 +18,7 @@
 #' @param variable Name of the variable to extract from \code{filename}
 #'   (character).
 #' @param icell_raster_pkg Boolean, if \code{TRUE}, cell indices will be ordered
-#'   as if you were extracting the data with the \code{\link[raster]{raster}}
-#'   package.
+#'   as if you were extracting the data with the raster package.
 #' @param add_xy Boolean, if \code{TRUE}, adds columns with x and y coordinates.
 #' @param interpolate_to_standard_calendar Boolean, if \code{TRUE} will use
 #'   \code{\link{map_non_standard_calendar}} to interpolate values to a standard
@@ -42,7 +41,7 @@
 #'   \url{https://code.mpimet.mpg.de/projects/cdo/}).
 #'
 #' @seealso The raster package can also open netcdf files and create data.frames
-#'   with \code{\link[raster]{as.data.frame}}. But, it does not handle
+#'   with \code{raster::as.data.frame}. But, it does not handle
 #'   non-standard calendars, and returns a data.frame, which is slower than
 #'   data.table.
 #'

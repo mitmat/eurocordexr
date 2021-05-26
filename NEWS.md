@@ -1,3 +1,12 @@
+# eurocordexr 0.2.1
+
+- changed package imports to not use `.onLoad()` with `library()` but rely on `#' @import`
+- updated `check_inventory()` and `compare_variables_in_inventory()` to reflect changes from `get_inventory()`
+- added a check for complete periods in `check_inventory()`
+- misc polishing for submission to CRAN
+
+---
+
 # eurocordexr 0.2.0
 
 - improved `get_inventory()` overview of file dates

@@ -1,7 +1,7 @@
 #' Perform some checks on the inventory
 #'
 #' Some simple checks for multiple time frequencies, domains, ensembles,
-#' downscale realisations, and completeness of simulation periods.
+#' downscale realizations, and completeness of simulation periods.
 #' Can also run \code{\link{compare_variables_in_inventory}}
 #' to check for completeness of variables for all models. These checks are meant
 #' as guides only, since one might not wish multiple elements of the above for
@@ -11,7 +11,7 @@
 #' \item for multiple time frequency (day, month, ...)
 #' \item for multiple domains (EUR-11, EUR-44, ...)
 #' \item for multiple ensembles (r1i1p1, r2i1p1, ...)
-#' \item for multiple downscale realisations (v1, v2, ..)
+#' \item for multiple downscale realizations (v1, v2, ..)
 #' \item for complete periods of simulations: historical usually goes approx.
 #' from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
 #' because it has very heterogeneous periods
@@ -22,7 +22,7 @@
 #' @param data_inventory A data.table as resulting from
 #'   \code{\link{get_inventory}}.
 #' @param check_vars Boolean, if \code{TRUE}, runs \code{\link{compare_variables_in_inventory}}
-#'  to check if all variables are availabe in all models.
+#'  to check if all variables are available in all models.
 #'
 #' @return Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
 #'   Only the checks for multiple values are taken into account, the one for completeness

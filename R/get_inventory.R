@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @import data.table
-#' @importFrom magrittr %>%
+#' @importFrom magrittr %>% equals
 #' @importFrom lubridate ymd day day<-
 #'
 #'

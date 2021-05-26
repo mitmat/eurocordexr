@@ -4,14 +4,14 @@
 #' Gregorian. Assumes daily data as input.
 #'
 #'
-#' @param times Vector of class PCICT (will be truncated to days).
+#' @param times Vector of class PCICt (will be truncated to days).
 #'
 #'
 #' @return A \code{\link{data.table}} with columns:
 #'
 #'   \itemize{ \item dates_full: sequence of standard dates from min to max date
 #'   in input times as data.table::IDate \item dates_pcict_inter: which dates in
-#'   PCICT from times correspond to the standard dates \item idx_pcict: the
+#'   PCICt from times correspond to the standard dates \item idx_pcict: the
 #'   index associated to the input times to be used for mapping e.g. values }
 #'
 #' @export

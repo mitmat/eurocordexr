@@ -20,8 +20,7 @@ nc_grid_to_dt(
 (character).}
 
 \item{icell_raster_pkg}{Boolean, if \code{TRUE}, cell indices will be ordered
-as if you were extracting the data with the \code{\link[raster]{raster}}
-package.}
+as if you were extracting the data with the raster package.}
 
 \item{add_xy}{Boolean, if \code{TRUE}, adds columns with x and y coordinates.}
 
@@ -72,7 +71,7 @@ dat <- nc_grid_to_dt(filename = "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i
 }
 \seealso{
 The raster package can also open netcdf files and create data.frames
-  with \code{\link[raster]{as.data.frame}}. But, it does not handle
+  with \code{raster::as.data.frame}. But, it does not handle
   non-standard calendars, and returns a data.frame, which is slower than
   data.table.
 }
