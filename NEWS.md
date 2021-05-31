@@ -4,6 +4,7 @@
 - updated `check_inventory()` and `compare_variables_in_inventory()` to reflect changes from `get_inventory()`
 - added a check for complete periods in `check_inventory()`
 - misc polishing for submission to CRAN
+- consolidate licenses for CRAN and github
 
 ---
 

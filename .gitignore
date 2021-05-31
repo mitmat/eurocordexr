@@ -5,4 +5,4 @@ doc/data-rcm
 .Rhistory
 .RData
 .Ruserdata
-temp_*
+Rtemp/
