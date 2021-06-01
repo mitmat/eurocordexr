@@ -13,8 +13,7 @@ Description:
     to deal with large data from RCMs, such as from EURO-CORDEX. It has functions
     to extract single grid cells from rotated pole netCDF's as well as the whole 
     array in long format. Can handle non-standard calendars (360, noleap) and 
-    interpolat
-    e them to a standard one. Potentially applicable to many CF-conform netCDFs. 
+    interpolate them to a standard one. Potentially applicable to many CF-conform netCDFs. 
 License: GPL-3
 Encoding: UTF-8
 Imports: 

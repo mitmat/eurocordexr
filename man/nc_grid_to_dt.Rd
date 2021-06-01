@@ -64,9 +64,12 @@ cell center), so merging based on coordinates can produce arbitrary results
 
 \examples{
 \dontrun{
-dat <- nc_grid_to_dt(filename = "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
-                     variable = "tas",
-                     verbose = T)
+dat <- nc_grid_to_dt(
+  filename =
+    "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
+  variable = "tas",
+  verbose = T
+)
 }
 }
 \seealso{

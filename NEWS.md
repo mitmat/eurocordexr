@@ -5,6 +5,7 @@
 - added a check for complete periods in `check_inventory()`
 - misc polishing for submission to CRAN
 - consolidate licenses for CRAN and github
+- added `globalVariables()` and reformatted examples to remove R CHECK NOTES
 
 ---
 

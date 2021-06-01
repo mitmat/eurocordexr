@@ -58,18 +58,24 @@ contains variables lon[rlon, rlat] and lat[rlon, rlat].
 \dontrun{
 # data are from EURO-CORDEX
 # standard calendar
-dt1 <- rotpole_nc_point_to_dt(filename = "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
-                              variable = "tas",
-                              point_lon = 11.31,
-                              point_lat = 46.5,
-                              verbose = T)
+dt1 <- rotpole_nc_point_to_dt(
+  filename =
+    "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
+  variable = "tas",
+  point_lon = 11.31,
+  point_lat = 46.5,
+  verbose = T
+)
 
 # non-standard calendar (360)
-dt2 <- rotpole_nc_point_to_dt(filename = "tas_EUR-11_MOHC-HadGEM2-ES_historical_r1i1p1_CLMcom-CCLM4-8-17_v1_day_19491201-19501230.nc",
-                              variable = "tas",
-                              point_lon = 11.31,
-                              point_lat = 46.5,
-                              interpolate_to_standard_calendar = T,
-                              verbose = T)
+dt2 <- rotpole_nc_point_to_dt(
+  filename =
+    "tas_EUR-11_MOHC-HadGEM2-ES_historical_r1i1p1_CLMcom-CCLM4-8-17_v1_day_19491201-19501230.nc",
+  variable = "tas",
+  point_lon = 11.31,
+  point_lat = 46.5,
+  interpolate_to_standard_calendar = T,
+  verbose = T
+)
 }
 }

@@ -2,8 +2,7 @@ This is a re-submission.
 
 Answers to CRAN comment (package did not pass automatic incoming tests):
 
--   consolidated the License field in DESCRIPTION and LICENSE file to match CRAN and github requirements. License is GPL-3
--   The other tests result only in NOTES: They are by design and explained further below
+-   fixed, no more NOTES, except for "new submission"
 
 ## Test environments
 
@@ -13,10 +12,7 @@ Answers to CRAN comment (package did not pass automatic incoming tests):
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs.
-
-There were 3 NOTES:
+There were 0 ERRORS, 0 WARNINGS, 1 NOTES.
 
 -   "CRAN incoming feasibility": New submission; possible misspellings are actually ok.
--   "no visible bindings for variables and .() function": I make usage of data.table NSE syntax.
--   "Rd line widths wider than 100 characters": In examples I use actual EUROCORDEX RCM-filenames, which are very long.
+
