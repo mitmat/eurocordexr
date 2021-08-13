@@ -1,6 +1,6 @@
 Package: eurocordexr
 Type: Package
-Title: Makes it Easier to Work with Daily netCDF from EURO-CORDEX RCMs
+Title: Makes it Easier to Work with Daily 'netCDF' from EURO-CORDEX RCMs
 Version: 0.2.1
 Authors@R: person("Michael", "Matiu", 
                   email = "michaelmatiu@gmail.com",
@@ -8,12 +8,14 @@ Authors@R: person("Michael", "Matiu",
                   comment = c(ORCID = "0000-0001-5289-0592"))
 Maintainer: Michael Matiu <michaelmatiu@gmail.com>
 Description: 
-    Daily netCDF data from e.g. regional climate models (RCMs) are not trivial
-    to work with. This package, which relies on data.table, makes it easier
-    to deal with large data from RCMs, such as from EURO-CORDEX. It has functions
-    to extract single grid cells from rotated pole netCDF's as well as the whole 
-    array in long format. Can handle non-standard calendars (360, noleap) and 
-    interpolate them to a standard one. Potentially applicable to many CF-conform netCDFs. 
+    Daily 'netCDF' data from e.g. regional climate models (RCMs) are not trivial
+    to work with. This package, which relies on 'data.table', makes it easier
+    to deal with large data from RCMs, such as from EURO-CORDEX 
+    (<https://www.euro-cordex.net/>, <https://cordex.org/data-access/>). It has 
+    functions to extract single grid cells from rotated pole grids as well as 
+    the whole array in long format. Can handle non-standard calendars (360, 
+    noleap) and interpolate them to a standard one. Potentially works with many 
+    CF-conform 'netCDF' files. 
 License: GPL-3
 Encoding: UTF-8
 Imports: 
