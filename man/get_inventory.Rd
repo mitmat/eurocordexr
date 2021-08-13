@@ -4,7 +4,7 @@
 \alias{get_inventory}
 \title{Get inventory from path containing EURO-CORDEX .nc files}
 \usage{
-get_inventory(path, add_files = F)
+get_inventory(path, add_files = FALSE)
 }
 \arguments{
 \item{path}{Path that will be searched recursively for .nc files.}
@@ -29,7 +29,7 @@ dat <- get_inventory(path)
 print(dat)
 
 # the same, but with files (does not print nicely)
-dat_file <- get_inventory(path, add_files = T)
+dat_file <- get_inventory(path, add_files = TRUE)
 print(dat_file)
 }
 }

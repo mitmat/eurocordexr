@@ -4,7 +4,7 @@
 \alias{check_inventory}
 \title{Perform some checks on the inventory}
 \usage{
-check_inventory(data_inventory, check_vars = F)
+check_inventory(data_inventory, check_vars = FALSE)
 }
 \arguments{
 \item{data_inventory}{A data.table as resulting from
@@ -14,9 +14,8 @@ check_inventory(data_inventory, check_vars = F)
 to check if all variables are available in all models.}
 }
 \value{
-Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
-  Only the checks for multiple values are taken into account, the one for completeness
-  of variables is not.
+An object of class "eurocordexr_inv_check" (an overloaded list) with results
+from the checks. Has a special print method, which shows a verbose summary of the results.
 }
 \description{
 Some simple checks for multiple time frequencies, domains, ensembles,
@@ -41,8 +40,9 @@ because it has very heterogeneous periods
 \examples{
 \dontrun{
 
-path <- "/mnt/CEPH_BASEDATA/METEO/SCENARIO"
-dat <- get_inventory(path)
-check_inventory(dat)
+path <- "/mnt/CEPH_PROJECTS/SCENARIO/CLIMATEDATA/"
+dat_inv <- get_inventory(path)
+inv_check <- check_inventory(dat_inv)
+inv_check
 }
 }

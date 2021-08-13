@@ -24,9 +24,8 @@
 #' @param check_vars Boolean, if \code{TRUE}, runs \code{\link{compare_variables_in_inventory}}
 #'  to check if all variables are available in all models.
 #'
-#' @return Invisibly TRUE if all checks passed, and FALSE if at least one check failed.
-#'   Only the checks for multiple values are taken into account, the one for completeness
-#'   of variables is not.
+#' @return An object of class "eurocordexr_inv_check" (an overloaded list) with results
+#' from the checks. Has a special print method, which shows a verbose summary of the results.
 #'
 #'
 #' @export
@@ -37,9 +36,10 @@
 #' @examples
 #' \dontrun{
 #'
-#' path <- "/mnt/CEPH_BASEDATA/METEO/SCENARIO"
-#' dat <- get_inventory(path)
-#' check_inventory(dat)
+#' path <- "/mnt/CEPH_PROJECTS/SCENARIO/CLIMATEDATA/"
+#' dat_inv <- get_inventory(path)
+#' inv_check <- check_inventory(dat_inv)
+#' inv_check
 #' }
 check_inventory <- function(data_inventory,
                             check_vars = FALSE){
@@ -50,72 +50,41 @@ check_inventory <- function(data_inventory,
   if("list_files" %in% names(dat_inv)) dat_inv[, list_files := NULL]
 
 
-  # start
-  cat("Checks performed:", "\n")
-  cat("------------------------------------------------------\n")
-  cat("------------------------------------------------------\n")
+  l_out <- list()
 
-  # check for mutliple timefreq
-  timefreqs <- unique(dat_inv$timefreq)
+
+
+  # check for multiple timefreq
+  timefreqs <- sort(unique(dat_inv$timefreq))
   timefreqs <- timefreqs[timefreqs != "fx"]
-  test_timefreq <- length(timefreqs) > 1
-  if(test_timefreq) {
-    cat("Multiple time frequencies detected:", timefreqs, "\n")
-  } else {
-    cat("No multiple time frequencies.", "\n")
-  }
-  cat("------------------------------------------------------\n")
-  cat("------------------------------------------------------\n")
 
-  # check for mutliple domains
-  test_domain <- length(unique(dat_inv$domain)) > 1
-  if(test_domain) {
-    cat("Multiple domains detected:", unique(dat_inv$domain), "\n")
-  } else {
-    cat("No multiple domains.", "\n")
-  }
-  cat("------------------------------------------------------\n")
-  cat("------------------------------------------------------\n")
+  l_out$timefreqs <- timefreqs
+
+  # check for multiple domains
+  l_out$domains <- sort(unique(dat_inv$domain))
+
 
   # check for multiple ensembles
-  dat_mult_ens <- dat_inv[, .N, .(variable, domain, gcm, institute_rcm, experiment,
-                                  downscale_realisation, timefreq)]
+  dat_mult_ens <- dat_inv[,
+                          .(N = .N,
+                            ensembles = paste(ensemble, collapse = ", ")),
+                          .(variable, domain, gcm, institute_rcm, experiment,
+                            downscale_realisation, timefreq)]
   dat_mult_ens <- dat_mult_ens[N > 1]
-  n_mult_ens <- nrow(dat_mult_ens)
-  test_mult_ens <- n_mult_ens > 0
-  if(test_mult_ens){
-    for(i in 1:n_mult_ens){
-      cat("Multiple ensembles in", i, "of", n_mult_ens, ":", "\n")
-      print(merge(dat_mult_ens[i], dat_inv,
-                  by = c("variable", "domain", "gcm", "institute_rcm",
-                         "experiment", "downscale_realisation", "timefreq")))
-      cat("------------------------------------------------------\n")
-    }
-  } else {
-    cat("No multiple ensembles.", "\n")
-    cat("------------------------------------------------------\n")
-  }
-  cat("------------------------------------------------------\n")
+
+  l_out$multiple_ensembles <- dat_mult_ens
+
 
   # check for multiple downscale_realisation
-  dat_mult_ds <- dat_inv[, .N, .(variable, domain, gcm, institute_rcm, experiment,
-                                 ensemble, timefreq)]
+  dat_mult_ds <- dat_inv[,
+                         .(N = .N,
+                           downscale_realisations = paste(downscale_realisation, collaps = ", ")),
+                         .(variable, domain, gcm, institute_rcm, experiment,
+                           ensemble, timefreq)]
   dat_mult_ds <- dat_mult_ds[N > 1]
-  n_mult_ds <- nrow(dat_mult_ds)
-  test_mult_ds <- n_mult_ds > 0
-  if(test_mult_ds){
-    for(i in 1:n_mult_ds){
-      cat("Multiple downscale realisation in", i, "of", n_mult_ds, ":", "\n")
-      print(merge(dat_mult_ds[i], dat_inv,
-                  by = c("variable", "domain", "gcm", "institute_rcm",
-                         "experiment", "ensemble", "timefreq")))
-      cat("------------------------------------------------------\n")
-    }
-  } else {
-    cat("No multiple downscale realisations", "\n")
-    cat("------------------------------------------------------\n")
-  }
-  cat("------------------------------------------------------\n")
+
+
+  l_out$multiple_downscale_realisations <- dat_mult_ds
 
 
   # check for complete periods ~1950/70-2005 and ~2006-2100
@@ -129,34 +98,110 @@ check_inventory <- function(data_inventory,
               !(year(date_start) %in% c(2005, 2006) &
                   total_simulation_years >= 93)]
   )
-  if(nrow(dat_period_complete) == 0){
+
+  l_out$incomplete_periods <- dat_period_complete
+
+
+  # check for complete combinations for all variables
+  if(check_vars){
+    variables <- unique(dat_inv$variable)
+    if(length(variables) > 1){
+      dat_comp <- compare_variables_in_inventory(dat_inv, variables)
+      dat_comp_mult <- dat_comp[all_date_start_equal == FALSE | all_years_equal == FALSE]
+      l_out$incomplete_variables <- dat_comp_mult
+    }
+  }
+
+
+  class(l_out) <- c("eurocordexr_inv_check", class(l_out))
+  l_out
+}
+
+
+#' @export
+print.eurocordexr_inv_check <- function(inv_check){
+
+  # start
+  cat("Checks performed:", "\n")
+  cat("------------------------------------------------------\n")
+  cat("------------------------------------------------------\n")
+
+
+  # check for multiple timefreq
+  test_timefreq <- length(inv_check$timefreqs) > 1
+
+  if(test_timefreq) {
+    cat("Multiple time frequencies detected:", inv_check$timefreqs, "\n")
+  } else {
+    cat("No multiple time frequencies.", "\n")
+  }
+  cat("------------------------------------------------------\n")
+  cat("------------------------------------------------------\n")
+
+
+
+  # check for multiple domains
+  test_domain <- length(inv_check$domains) > 1
+  if(test_domain) {
+    cat("Multiple domains detected:", inv_check$domains, "\n")
+  } else {
+    cat("No multiple domains.", "\n")
+  }
+  cat("------------------------------------------------------\n")
+  cat("------------------------------------------------------\n")
+
+
+
+
+  # check for multiple ensembles
+  n_mult_ens <- nrow(inv_check$multiple_ensembles)
+  test_mult_ens <- n_mult_ens > 0
+
+  if(test_mult_ens){
+    cat("Multiple ensembles in", n_mult_ens, "cases:", "\n")
+    print(inv_check$multiple_ensembles)
+  } else {
+    cat("No multiple ensembles.", "\n")
+  }
+  cat("------------------------------------------------------\n")
+  cat("------------------------------------------------------\n")
+
+
+
+
+  # check for multiple downscale_realisation
+  n_mult_ds <- nrow(inv_check$multiple_downscale_realisations)
+  test_mult_ds <- n_mult_ds > 0
+  if(test_mult_ds){
+    cat("Multiple downscale realisation in", n_mult_ds, "cases:", "\n")
+    print(inv_check$multiple_downscale_realisations)
+  } else {
+    cat("No multiple downscale realisations", "\n")
+  }
+  cat("------------------------------------------------------\n")
+  cat("------------------------------------------------------\n")
+
+
+  if(nrow(inv_check$incomplete_periods) == 0){
     cat("All historical and rcp simulations have complete periods.\n")
     test_complete_period <- FALSE
   } else {
     cat("Following model runs do not have complete periods:", "\n")
-    print(dat_period_complete)
+    print(inv_check$incomplete_periods)
     test_complete_period <- TRUE
   }
   cat("------------------------------------------------------\n")
   cat("------------------------------------------------------\n")
 
 
-  # check for complete combinations for all variables
-  if(check_vars){
-    variables <- unique(dat_inv$variable)
-    if(length(variables) == 1){
-      cat("Only one variable:", variables, "\n")
-      test_variable <- FALSE
+
+  if(!is.null(inv_check$incomplete_variables)){
+    test_variable <- nrow(inv_check$incomplete_variables) > 0
+    if(test_variable){
+      cat("Following models do not have all variables:", "\n")
+      print(inv_check$incomplete_variables)
     } else {
-      dat_comp <- compare_variables_in_inventory(dat_inv, variables)
-      dat_comp_mult <- dat_comp[all_date_start_equal == FALSE | all_years_equal == FALSE]
-      test_variable <- nrow(dat_comp_mult) > 0
-      if(test_variable){
-        cat("Following models do not have all variables:", "\n")
-        print(dat_comp_mult)
-      } else {
-        cat("All variables present in all models.", "\n")
-      }
+      cat("All variables present in all models.", "\n")
     }
     cat("------------------------------------------------------\n")
     cat("------------------------------------------------------\n")
@@ -168,10 +213,5 @@ check_inventory <- function(data_inventory,
   cat("------------------------------------------------------\n")
   cat("------------------------------------------------------\n")
 
-  # return invisibly TRUE if all tests passed, FALSE otherwise if one failed
-  out_test <- !(test_timefreq | test_domain |
-                  test_mult_ens | test_mult_ds |
-                  test_complete_period)
-  invisible(out_test)
 
 }
