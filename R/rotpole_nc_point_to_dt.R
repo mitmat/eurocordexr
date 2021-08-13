@@ -48,7 +48,7 @@
 #'   variable = "tas",
 #'   point_lon = 11.31,
 #'   point_lat = 46.5,
-#'   verbose = T
+#'   verbose = TRUE
 #' )
 #'
 #' # non-standard calendar (360)
@@ -58,20 +58,20 @@
 #'   variable = "tas",
 #'   point_lon = 11.31,
 #'   point_lat = 46.5,
-#'   interpolate_to_standard_calendar = T,
-#'   verbose = T
+#'   interpolate_to_standard_calendar = TRUE,
+#'   verbose = TRUE
 #' )
 #' }
 rotpole_nc_point_to_dt <- function(filename,
                                    variable,
                                    point_lon,
                                    point_lat,
-                                   interpolate_to_standard_calendar = F,
-                                   verbose = F,
-                                   add_grid_coord = F){
+                                   interpolate_to_standard_calendar = FALSE,
+                                   verbose = FALSE,
+                                   add_grid_coord = FALSE){
 
   ncobj <- nc_open(filename,
-                   readunlim = F)
+                   readunlim = FALSE)
 
   if(verbose) cat("Succesfully opened file:", filename, "\n")
 

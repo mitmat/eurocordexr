@@ -59,18 +59,18 @@
 #'   filename =
 #'     "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
 #'   variable = "tas",
-#'   verbose = T
+#'   verbose = TRUE
 #' )
 #' }
 nc_grid_to_dt <- function(filename,
                           variable,
-                          icell_raster_pkg = T,
-                          add_xy = F,
-                          interpolate_to_standard_calendar = F,
-                          verbose = F){
+                          icell_raster_pkg = TRUE,
+                          add_xy = FALSE,
+                          interpolate_to_standard_calendar = FALSE,
+                          verbose = FALSE){
 
   ncobj <- nc_open(filename,
-                   readunlim = F)
+                   readunlim = FALSE)
 
   if(verbose) cat("Succesfully opened file:", filename, "\n")
 

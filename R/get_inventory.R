@@ -29,15 +29,15 @@
 #' print(dat)
 #'
 #' # the same, but with files (does not print nicely)
-#' dat_file <- get_inventory(path, add_files = T)
+#' dat_file <- get_inventory(path, add_files = TRUE)
 #' print(dat_file)
 #' }
 get_inventory <- function(path,
-                          add_files = F){
+                          add_files = FALSE){
 
   all_files_fullpath <- fs::dir_ls(path,
                                    regexp = "[.]nc$",
-                                   recurse = T)
+                                   recurse = TRUE)
 
   all_files_base <- fs::path_file(all_files_fullpath)
 
@@ -89,7 +89,7 @@ get_inventory <- function(path,
 
     if(all(is.na(date_start))) return(NA_integer_)
 
-    mapply(seq, year(date_start), year(date_end), SIMPLIFY = F) %>%
+    mapply(seq, year(date_start), year(date_end), SIMPLIFY = FALSE) %>%
       unlist %>%
       unique %>%
       length

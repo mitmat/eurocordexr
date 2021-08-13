@@ -42,7 +42,7 @@
 #' check_inventory(dat)
 #' }
 check_inventory <- function(data_inventory,
-                            check_vars = F){
+                            check_vars = FALSE){
 
   dat_inv <- copy(data_inventory)
 
@@ -131,11 +131,11 @@ check_inventory <- function(data_inventory,
   )
   if(nrow(dat_period_complete) == 0){
     cat("All historical and rcp simulations have complete periods.\n")
-    test_complete_period <- F
+    test_complete_period <- FALSE
   } else {
     cat("Following model runs do not have complete periods:", "\n")
     print(dat_period_complete)
-    test_complete_period <- T
+    test_complete_period <- TRUE
   }
   cat("------------------------------------------------------\n")
   cat("------------------------------------------------------\n")
@@ -146,7 +146,7 @@ check_inventory <- function(data_inventory,
     variables <- unique(dat_inv$variable)
     if(length(variables) == 1){
       cat("Only one variable:", variables, "\n")
-      test_variable <- F
+      test_variable <- FALSE
     } else {
       dat_comp <- compare_variables_in_inventory(dat_inv, variables)
       dat_comp_mult <- dat_comp[all_date_start_equal == FALSE | all_years_equal == FALSE]
