@@ -22,14 +22,16 @@ Interpolates non-standard calendars (360 and noleap) to the standard
 Gregorian. Assumes daily data as input.
 }
 \examples{
-\dontrun{
-ncobj <- nc_open(
-  "tas_EUR-11_MOHC-HadGEM2-ES_historical_r1i1p1_CLMcom-CCLM4-8-17_v1_day_19491201-19501230.nc"
-)
-times <- nc.get.time.series(ncobj, "tas")
+# example data from EURO-CORDEX (cropped for size)
+# non-standard calendar (360)
+fn2 <- system.file("extdata", "test2.nc", package = "eurocordexr")
+ncobj <- nc_open(fn2)
+
+# read as PCICt-class
+times <- nc.get.time.series(ncobj, "tasmin")
+str(times)
 
 dtx <- map_non_standard_calendar(times)
-dates <- dtx$dates_full
-values <- values[dtx$idx_pcict]
-}
+dtx[58:64]
+
 }

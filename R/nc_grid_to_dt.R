@@ -54,14 +54,13 @@
 #' @import ncdf4.helpers
 #'
 #' @examples
-#' \dontrun{
+#' # example data from EURO-CORDEX (cropped for size)
+#' fn1 <- system.file("extdata", "test1.nc", package = "eurocordexr")
 #' dat <- nc_grid_to_dt(
-#'   filename =
-#'     "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
-#'   variable = "tas",
-#'   verbose = TRUE
+#'   filename = fn1,
+#'   variable = "tasmin"
 #' )
-#' }
+#' str(dat)
 nc_grid_to_dt <- function(filename,
                           variable,
                           icell_raster_pkg = TRUE,

@@ -39,29 +39,32 @@
 #' @import ncdf4.helpers
 #'
 #' @examples
-#' \dontrun{
-#' # data are from EURO-CORDEX
+#' # example data from EURO-CORDEX (cropped for size)
+#'
 #' # standard calendar
+#' fn1 <- system.file("extdata", "test1.nc", package = "eurocordexr")
 #' dt1 <- rotpole_nc_point_to_dt(
-#'   filename =
-#'     "tas_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_SMHI-RCA4_v1_day_19700101-19701231.nc",
-#'   variable = "tas",
+#'   filename = fn1,
+#'   variable = "tasmin",
 #'   point_lon = 11.31,
 #'   point_lat = 46.5,
 #'   verbose = TRUE
 #' )
 #'
 #' # non-standard calendar (360)
-#' dt2 <- rotpole_nc_point_to_dt(
-#'   filename =
-#'     "tas_EUR-11_MOHC-HadGEM2-ES_historical_r1i1p1_CLMcom-CCLM4-8-17_v1_day_19491201-19501230.nc",
-#'   variable = "tas",
-#'   point_lon = 11.31,
-#'   point_lat = 46.5,
-#'   interpolate_to_standard_calendar = TRUE,
-#'   verbose = TRUE
-#' )
-#' }
+#' fn2 <- system.file("extdata", "test2.nc", package = "eurocordexr")
+#'
+#' # read as is
+#' dt2 <- rotpole_nc_point_to_dt(fn2, "tasmin", 11.31, 46.5)
+#' str(dt2) # chr date
+#' dt2[86:94, ] # e.g. 30th of February in 360 calendar
+#'
+#' # interpolate to standard
+#' dt3 <- rotpole_nc_point_to_dt(fn2, "tasmin", 11.31, 46.5,
+#'                               interpolate_to_standard_calendar = TRUE)
+#' str(dt3) # class Date
+#' dt3[86:94, ] # standard calender
+#'
 rotpole_nc_point_to_dt <- function(filename,
                                    variable,
                                    point_lon,
