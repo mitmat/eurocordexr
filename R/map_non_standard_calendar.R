@@ -14,6 +14,9 @@
 #'   PCICt from times correspond to the standard dates \item idx_pcict: the
 #'   index associated to the input times to be used for mapping e.g. values }
 #'
+#' @seealso Can be used internally in \code{\link{rotpole_nc_point_to_dt}} and
+#'   \code{\link{nc_grid_to_dt}} by setting the respective arguments.
+#'
 #' @export
 #'
 #' @import data.table

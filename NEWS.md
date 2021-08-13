@@ -1,3 +1,13 @@
+# eurocordexr 0.2.2
+
+- updated description with links, put packages and API in single quotes
+- spelled out TRUE and FALSE
+- check_inventory() now returns an overloaded list of class "eurocordex_inv_check" with specific 
+  print method
+- added test netCDF files, cropped from EURO-CORDEX for size; used for examples
+
+---
+
 # eurocordexr 0.2.1
 
 - changed package imports to not use `.onLoad()` with `library()` but rely on `#' @import`

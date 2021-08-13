@@ -119,7 +119,7 @@ check_inventory <- function(data_inventory,
 
 
 #' @export
-print.eurocordexr_inv_check <- function(inv_check){
+print.eurocordexr_inv_check <- function(x, ...){
 
   # start
   cat("Checks performed:", "\n")
@@ -128,10 +128,10 @@ print.eurocordexr_inv_check <- function(inv_check){
 
 
   # check for multiple timefreq
-  test_timefreq <- length(inv_check$timefreqs) > 1
+  test_timefreq <- length(x$timefreqs) > 1
 
   if(test_timefreq) {
-    cat("Multiple time frequencies detected:", inv_check$timefreqs, "\n")
+    cat("Multiple time frequencies detected:", x$timefreqs, "\n")
   } else {
     cat("No multiple time frequencies.", "\n")
   }
@@ -141,9 +141,9 @@ print.eurocordexr_inv_check <- function(inv_check){
 
 
   # check for multiple domains
-  test_domain <- length(inv_check$domains) > 1
+  test_domain <- length(x$domains) > 1
   if(test_domain) {
-    cat("Multiple domains detected:", inv_check$domains, "\n")
+    cat("Multiple domains detected:", x$domains, "\n")
   } else {
     cat("No multiple domains.", "\n")
   }
@@ -154,12 +154,12 @@ print.eurocordexr_inv_check <- function(inv_check){
 
 
   # check for multiple ensembles
-  n_mult_ens <- nrow(inv_check$multiple_ensembles)
+  n_mult_ens <- nrow(x$multiple_ensembles)
   test_mult_ens <- n_mult_ens > 0
 
   if(test_mult_ens){
     cat("Multiple ensembles in", n_mult_ens, "cases:", "\n")
-    print(inv_check$multiple_ensembles)
+    print(x$multiple_ensembles)
   } else {
     cat("No multiple ensembles.", "\n")
   }
@@ -170,11 +170,11 @@ print.eurocordexr_inv_check <- function(inv_check){
 
 
   # check for multiple downscale_realisation
-  n_mult_ds <- nrow(inv_check$multiple_downscale_realisations)
+  n_mult_ds <- nrow(x$multiple_downscale_realisations)
   test_mult_ds <- n_mult_ds > 0
   if(test_mult_ds){
     cat("Multiple downscale realisation in", n_mult_ds, "cases:", "\n")
-    print(inv_check$multiple_downscale_realisations)
+    print(x$multiple_downscale_realisations)
   } else {
     cat("No multiple downscale realisations", "\n")
   }
@@ -182,12 +182,12 @@ print.eurocordexr_inv_check <- function(inv_check){
   cat("------------------------------------------------------\n")
 
 
-  if(nrow(inv_check$incomplete_periods) == 0){
+  if(nrow(x$incomplete_periods) == 0){
     cat("All historical and rcp simulations have complete periods.\n")
     test_complete_period <- FALSE
   } else {
     cat("Following model runs do not have complete periods:", "\n")
-    print(inv_check$incomplete_periods)
+    print(x$incomplete_periods)
     test_complete_period <- TRUE
   }
   cat("------------------------------------------------------\n")
@@ -195,11 +195,11 @@ print.eurocordexr_inv_check <- function(inv_check){
 
 
 
-  if(!is.null(inv_check$incomplete_variables)){
-    test_variable <- nrow(inv_check$incomplete_variables) > 0
+  if(!is.null(x$incomplete_variables)){
+    test_variable <- nrow(x$incomplete_variables) > 0
     if(test_variable){
       cat("Following models do not have all variables:", "\n")
-      print(inv_check$incomplete_variables)
+      print(x$incomplete_variables)
     } else {
       cat("All variables present in all models.", "\n")
     }

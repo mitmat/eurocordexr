@@ -35,3 +35,7 @@ dtx <- map_non_standard_calendar(times)
 dtx[58:64]
 
 }
+\seealso{
+Can be used internally in \code{\link{rotpole_nc_point_to_dt}} and
+  \code{\link{nc_grid_to_dt}} by setting the respective arguments.
+}
