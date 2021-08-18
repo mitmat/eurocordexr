@@ -44,9 +44,14 @@ but also enable automatic testing.
 ## Test environments
 
 -   local R installation, R 4.1.0
--   ubuntu 16.04 (on travis-ci), R 4.1.0
 -   win-builder (devel)
+-   Windows Server 2008 R2 SP1, R-devel, 32/64 bit
+-   Ubuntu Linux 20.04.1 LTS, R-release, GCC
+-   Fedora Linux, R-devel, clang, gfortran
+
 
 ## R CMD check results
 
-There were 0 ERRORS, 0 WARNINGS, 0 NOTES.
+There were 0 ERRORS, 0 WARNINGS, 1 NOTES.
+
+- CRAN incoming feasibility: New submssions; and possible misspellings (actually OK)
