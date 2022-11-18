@@ -14,11 +14,17 @@ Main components:
  
 ## Installation
 
+Get the CRAN version:
 
 ```{r}
 # from CRAN
 install.packages("eurocordexr")
+```
 
+
+Or get the latest (development) version from gihub:
+
+```{r}
 # or from github
 devtools::install_github("mitmat/eurocordexr")
 ```

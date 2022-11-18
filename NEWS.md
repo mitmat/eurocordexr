@@ -1,3 +1,9 @@
+# eurocordexr 0.2.3 (dev)
+
+- updated `check_inventory()` to work with CORDEX-Adjust data, too. 
+
+---
+
 # eurocordexr 0.2.2
 
 - updated description with links, put packages and API in single quotes

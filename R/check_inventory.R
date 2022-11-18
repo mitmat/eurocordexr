@@ -14,7 +14,8 @@
 #' \item for multiple downscale realizations (v1, v2, ..)
 #' \item for complete periods of simulations: historical usually goes approx.
 #' from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
-#' because it has very heterogeneous periods
+#' because it has very heterogeneous periods; cordex-adjust has historical and
+#' rcp* combined
 #' \item that all variables (tas, pr, ...) are available for all models
 #' }
 #'
@@ -76,7 +77,7 @@ check_inventory <- function(data_inventory,
 
 
   # check for multiple downscale_realisation
-  dat_mult_ds <- dat_inv[,
+  dat_mult_ds <- dat_inv[!grepl("Adjust", variable),
                          .(N = .N,
                            downscale_realisations = paste(downscale_realisation, collaps = ", ")),
                          .(variable, domain, gcm, institute_rcm, experiment,
@@ -94,9 +95,14 @@ check_inventory <- function(data_inventory,
                   total_simulation_years >= 54) &
               !(year(date_start) %in% c(1970) &
                   total_simulation_years >= 36)],
-    dat_inv[startsWith(experiment, "rcp") & !is.na(date_start) &
+    dat_inv[!grepl("Adjust", variable) & startsWith(experiment, "rcp") & !is.na(date_start) &
               !(year(date_start) %in% c(2005, 2006) &
-                  total_simulation_years >= 93)]
+                  total_simulation_years >= 93)],
+    dat_inv[grepl("Adjust", variable) & !is.na(date_start) &
+              !(year(date_start) %in% 1948:1951 &
+                  total_simulation_years >= 147) &
+              !(year(date_start) %in% c(1970, 1971) &
+                  total_simulation_years >= 128)]
   )
 
   l_out$incomplete_periods <- dat_period_complete

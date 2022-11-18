@@ -33,7 +33,8 @@ The checks are \itemize{
 \item for multiple downscale realizations (v1, v2, ..)
 \item for complete periods of simulations: historical usually goes approx.
 from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
-because it has very heterogeneous periods
+because it has very heterogeneous periods; cordex-adjust has historical and
+rcp* combined
 \item that all variables (tas, pr, ...) are available for all models
 }
 }
