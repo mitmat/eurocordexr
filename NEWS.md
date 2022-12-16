@@ -2,6 +2,7 @@
 
 - updated `check_inventory()` to work with CORDEX-Adjust data, too. 
 - added `date_range` parameter to `nc_grid_to_dt()`
+- added helper function `get_varnames()` to list variable names in a netcdf file 
 
 ---
 
