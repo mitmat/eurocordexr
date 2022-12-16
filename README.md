@@ -1,8 +1,7 @@
 ## Overview
 
 
-A package to make life easier working with daily netcdf files from the 
-EURO-CORDEX RCMs. Relies on `data.table` to do the heavy data lifting.
+A package to make life easier working with daily netcdf files from the EURO-CORDEX RCMs. Relies on `data.table` to do the heavy data lifting.
 
 Main components:
 
@@ -11,6 +10,9 @@ Main components:
   - can deal with non-standard calendars (360, noleap) and interpolate them
   - get and check list of EURO-CORDEX .nc files: `get_inventory()`
 
+Alternatives:
+
+The [stars](https://cran.r-project.org/web/packages/stars/index.html) and [terra](https://cran.r-project.org/web/packages/terra/index.html) (previously raster) packages can be used similarly, although the functionality for rotated pole grids and non-standard calendars might be different.
  
 ## Installation
 
