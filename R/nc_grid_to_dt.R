@@ -109,11 +109,12 @@ nc_grid_to_dt <- function(filename,
     arr_var <- ncvar_get(ncobj, variable)
 
   } else {
+    stopifnot(date_range[1] <= date_range[2])
     # workaround for 360 calendar
     if(inherits(dates, "character")) date_range <- as.character(date_range)
 
-    i_date_start <- min(match(date_range, dates))
-    i_date_end <- max(match(date_range, dates))
+    i_date_start <- min(which(dates >= date_range[1]))
+    i_date_end <- max(which(dates <= date_range[2]))
     ndates <- i_date_end - i_date_start + 1
     arr_var <- ncvar_get(ncobj, variable, start = c(1,1,i_date_start), count = c(-1,-1, ndates))
 
