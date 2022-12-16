@@ -1,6 +1,7 @@
 # eurocordexr 0.2.3 (dev)
 
 - updated `check_inventory()` to work with CORDEX-Adjust data, too. 
+- added `date_range` parameter to `nc_grid_to_dt()`
 
 ---
 

@@ -23,6 +23,8 @@
 #' @param interpolate_to_standard_calendar Boolean, if \code{TRUE} will use
 #'   \code{\link{map_non_standard_calendar}} to interpolate values to a standard
 #'   calendar.
+#' @param date_range (optional) two-element vector of class Date, which will be
+#'   used to extract only parts of the netcdf file
 #' @param verbose Boolean, if \code{TRUE}, prints more information.
 #'
 #' @return A \code{\link[data.table]{data.table}} with columns: \itemize{\item
@@ -40,8 +42,8 @@
 #'   aggregating (e.g. using CDO:
 #'   \url{https://code.mpimet.mpg.de/projects/cdo/}).
 #'
-#' @seealso The raster package can also open netcdf files and create data.frames
-#'   with \code{raster::as.data.frame}. But, it does not handle
+#' @seealso The raster and terra packages can also open netcdf files and create data.frames
+#'   with \code{raster::as.data.frame} or  \code{terra::as.data.frame}. But, it does not handle
 #'   non-standard calendars, and returns a data.frame, which is slower than
 #'   data.table.
 #'
@@ -66,6 +68,7 @@ nc_grid_to_dt <- function(filename,
                           icell_raster_pkg = TRUE,
                           add_xy = FALSE,
                           interpolate_to_standard_calendar = FALSE,
+                          date_range,
                           verbose = FALSE){
 
   ncobj <- nc_open(filename,
@@ -100,11 +103,28 @@ nc_grid_to_dt <- function(filename,
 
   nx <- length(dim_x)
   ny <- length(dim_y)
-  ndates <- length(dates)
+
+  if(missing(date_range)){
+    ndates <- length(dates)
+    arr_var <- ncvar_get(ncobj, variable)
+
+  } else {
+    # workaround for 360 calendar
+    if(inherits(dates, "character")) date_range <- as.character(date_range)
+
+    i_date_start <- min(match(date_range, dates))
+    i_date_end <- max(match(date_range, dates))
+    ndates <- i_date_end - i_date_start + 1
+    arr_var <- ncvar_get(ncobj, variable, start = c(1,1,i_date_start), count = c(-1,-1, ndates))
+
+    dates <- dates[i_date_start : i_date_end]
+    times <- times[i_date_start : i_date_end]
+  }
 
   dat <- data.table(icell =  rep(1:(nx*ny), ndates),
                     date = rep(dates, each = nx * ny),
-                    value = as.vector(ncvar_get(ncobj, variable)))
+                    value = as.vector(arr_var))
+
 
   if(icell_raster_pkg){
     # raster package orders cells differently (y inverse)

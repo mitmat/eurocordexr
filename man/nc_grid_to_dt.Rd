@@ -10,6 +10,7 @@ nc_grid_to_dt(
   icell_raster_pkg = TRUE,
   add_xy = FALSE,
   interpolate_to_standard_calendar = FALSE,
+  date_range,
   verbose = FALSE
 )
 }
@@ -27,6 +28,9 @@ as if you were extracting the data with the raster package.}
 \item{interpolate_to_standard_calendar}{Boolean, if \code{TRUE} will use
 \code{\link{map_non_standard_calendar}} to interpolate values to a standard
 calendar.}
+
+\item{date_range}{(optional) two-element vector of class Date, which will be
+used to extract only parts of the netcdf file}
 
 \item{verbose}{Boolean, if \code{TRUE}, prints more information.}
 }
@@ -72,8 +76,8 @@ dat <- nc_grid_to_dt(
 str(dat)
 }
 \seealso{
-The raster package can also open netcdf files and create data.frames
-  with \code{raster::as.data.frame}. But, it does not handle
+The raster and terra packages can also open netcdf files and create data.frames
+  with \code{raster::as.data.frame} or  \code{terra::as.data.frame}. But, it does not handle
   non-standard calendars, and returns a data.frame, which is slower than
   data.table.
 }
