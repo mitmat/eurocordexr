@@ -29,20 +29,21 @@ as if you were extracting the data with the raster package.}
 \code{\link{map_non_standard_calendar}} to interpolate values to a standard
 calendar.}
 
-\item{date_range}{(optional) two-element vector of class Date, which will be
-used to extract only parts of the netcdf file}
+\item{date_range}{(optional) two-element vector of class Date (min, max),
+which will be used to extract only parts of the netcdf file}
 
 \item{verbose}{Boolean, if \code{TRUE}, prints more information.}
 }
 \value{
 A \code{\link[data.table]{data.table}} with columns: \itemize{\item
-  icell: Cell index \item date: Date of class
-  \code{\link{Date}}, unless the .nc file has a non-standard
-  calendar (360, noleap) and \code{interpolate_to_standard_calendar} is set
-  to \code{FALSE}, in which it will be character. \item variable: Values,
-  column is renamed to input \code{variable} \item (optional) x,y:
-  Coordinates of netcdf dimensions, will be renamed to dimension names found
-  in array named after input \code{variable}}
+  icell: Cell index \item date: Date of class \code{\link{Date}}, if file has
+  a standard calendar. Date as character, if it has a non-standard calendar
+  (360, noleap) and if \code{interpolate_to_standard_calendar} is set to
+  \code{FALSE}. If \code{interpolate_to_standard_calendar} is \code{TRUE},
+  it's always of class \code{\link{Date}}. \item variable: Values, column is
+  renamed to input \code{variable} \item (optional) x,y: Coordinates of
+  netcdf dimensions, will be renamed to dimension names found in array named
+  after input \code{variable}}
 }
 \description{
 Extracts a variable from netcdf, and returns a
@@ -76,8 +77,9 @@ dat <- nc_grid_to_dt(
 str(dat)
 }
 \seealso{
-The raster and terra packages can also open netcdf files and create data.frames
-  with \code{raster::as.data.frame} or  \code{terra::as.data.frame}. But, it does not handle
-  non-standard calendars, and returns a data.frame, which is slower than
-  data.table.
+The raster and terra packages can also open netcdf files and create
+  data.frames with \code{\link[raster:as.data.frame]{raster::as.data.frame}}
+  or \code{\link[terra:as.data.frame]{terra::as.data.frame}}. But, it does
+  not handle non-standard calendars, and returns a data.frame, which is
+  slower than data.table.
 }
