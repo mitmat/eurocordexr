@@ -27,6 +27,6 @@ Depends:
     magrittr,
     ncdf4,
     ncdf4.helpers
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 URL: https://github.com/mitmat/eurocordexr
 BugReports: https://github.com/mitmat/eurocordexr/issues

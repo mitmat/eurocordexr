@@ -4,14 +4,14 @@
 \alias{get_inventory}
 \title{Get inventory from path containing EURO-CORDEX .nc files}
 \usage{
-get_inventory(path, add_files = FALSE)
+get_inventory(path, add_files = TRUE)
 }
 \arguments{
 \item{path}{Path that will be searched recursively for .nc files.}
 
-\item{add_files}{Boolean, if \code{TRUE}, will add a column containing lists
-of associated files with their full paths (useful e.g. for further
-processing).}
+\item{add_files}{Boolean (default \code{TRUE}), if \code{TRUE}, will add a
+column containing lists of associated files with their full paths (useful
+e.g. for further processing).}
 }
 \value{
 A data.table with the inventory information.
@@ -28,12 +28,9 @@ path <- "/mnt/CEPH_BASEDATA/METEO/SCENARIO"
 dat <- get_inventory(path)
 print(dat)
 
-# the same, but with files (does not print nicely)
-dat_file <- get_inventory(path, add_files = TRUE)
-print(dat_file)
 }
 }
 \seealso{
-\code{\link{compare_variables_in_inventory}} for further comparing the
-  results, and \code{\link{check_inventory}} for performing some checks.
+\code{\link{compare_variables_in_inventory}} for further comparing
+  the results, and \code{\link{check_inventory}} for performing some checks.
 }

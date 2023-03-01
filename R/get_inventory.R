@@ -5,14 +5,14 @@
 #' years.
 #'
 #' @param path Path that will be searched recursively for .nc files.
-#' @param add_files Boolean, if \code{TRUE}, will add a column containing lists
-#'   of associated files with their full paths (useful e.g. for further
-#'   processing).
+#' @param add_files Boolean (default \code{TRUE}), if \code{TRUE}, will add a
+#'   column containing lists of associated files with their full paths (useful
+#'   e.g. for further processing).
 #'
 #' @return A data.table with the inventory information.
 #'
-#' @seealso \code{\link{compare_variables_in_inventory}} for further comparing the
-#'   results, and \code{\link{check_inventory}} for performing some checks.
+#' @seealso \code{\link{compare_variables_in_inventory}} for further comparing
+#'   the results, and \code{\link{check_inventory}} for performing some checks.
 #'
 #' @export
 #'
@@ -28,12 +28,9 @@
 #' dat <- get_inventory(path)
 #' print(dat)
 #'
-#' # the same, but with files (does not print nicely)
-#' dat_file <- get_inventory(path, add_files = TRUE)
-#' print(dat_file)
 #' }
 get_inventory <- function(path,
-                          add_files = FALSE){
+                          add_files = TRUE){
 
   all_files_fullpath <- fs::dir_ls(path,
                                    regexp = "[.]nc$",
@@ -111,9 +108,59 @@ get_inventory <- function(path,
   # remove files if not requested
   if(!add_files) dat_info_summary[, list_files := NULL]
 
+  # make a class to define specific print options
+  setattr(dat_info_summary, "class", c("eurocordexr_inv", class(dat_info_summary)))
 
   return(dat_info_summary)
 }
+#' Print an inventory
+#'
+#' Modified
+#'   \code{\link[data.table:print.data.table]{data.table::print.data.table}} to
+#'   print an inventory from \code{\link{get_inventory}} more nicely by
+#'   removing some columns.
+#'
+#' @param x data.table to print
+#' @param all_cols Boolean (default \code{FALSE}), if \code{TRUE}, will print all
+#'   columns available
+#'
+#' @return x invisibly, used for side effects: prints to console
+#'
+#' @seealso \code{\link{print.default}}
+#' @export
+print.eurocordexr_inv <- function(x, all_cols = F, ...){
+
+  cols_optional <- c("nn_files",
+                     "total_simulation_years",
+                     "period_contiguous",
+                     "list_files")
+  class_abbs <- c("<int>", "<int>", "<lgcl>", "<list>")
+
+  # print less columns
+  if(!all_cols){
+
+    avail <- cols_optional %in% colnames(x)
+    cols_not_print <- cols_optional[avail]
+    n <- length(cols_not_print)
+    data.table:::print.data.table(x[, -..cols_not_print],
+                                  class = TRUE, trunc.cols = FALSE,
+                                  ...)
+    # borrowed from data.table:::print.data.table()
+    if(n > 0L){
+      cat(sprintf(ngettext(n,
+                           "%d variable not shown: %s\n",
+                           "%d variables not shown: %s\n"),
+                  n,
+                  data.table:::brackify(paste(cols_not_print, class_abbs[avail]))))
+    }
 
 
+  } else {
+    data.table:::print.data.table(x,
+                                  class = TRUE, trunc.cols = FALSE,
+                                  ...)
+  }
+
+  invisible(x)
+}
 

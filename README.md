@@ -24,7 +24,7 @@ install.packages("eurocordexr")
 ```
 
 
-Or get the latest (development) version from gihub:
+Or get the latest (development) version from github:
 
 ```{r}
 # or from github
@@ -46,5 +46,12 @@ For the netCDF packages, depending on your system, additional libraries might be
 
 ## Other
     
-Some documentation can be found in the `doc/` subfolder. To view the HTML files you may need to download the files (and not view them in gitlab).    
+Some documentation can be found in the `doc/` subfolder. To view the HTML files you may need to download the files (and not view them in github).
+
+## Contribution and help
+
+Any ideas and suggestions are welcome! Feel free to contact me or open issues in github.
+
+
+
 
