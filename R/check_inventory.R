@@ -97,7 +97,11 @@ check_inventory <- function(data_inventory,
                   total_simulation_years >= 36)],
     dat_inv[!grepl("Adjust", variable) & startsWith(experiment, "rcp") & !is.na(date_start) &
               !(year(date_start) %in% c(2005, 2006) &
-                  total_simulation_years >= 93)],
+                  total_simulation_years >= 93) &
+              !(year(date_start) %in% 1948:1951 &
+                  total_simulation_years >= 147) &
+              !(year(date_start) %in% c(1970, 1971) &
+                  total_simulation_years >= 128)],
     dat_inv[grepl("Adjust", variable) & !is.na(date_start) &
               !(year(date_start) %in% 1948:1951 &
                   total_simulation_years >= 147) &
