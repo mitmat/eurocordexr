@@ -1,9 +1,10 @@
 # eurocordexr 0.2.3 (dev)
 
-- updated `check_inventory()` to work with CORDEX-Adjust data, too. 
+- updated `check_inventory()` to work with CORDEX-Adjust data, too. Check for full period also works if historical is merged to the RCP in filenames.
 - added `date_range` parameter to `nc_grid_to_dt()` to allow easier extraction of subset of data
 - added helper function `get_varnames()` to list variable names in a netcdf file 
 - made the inventory data.table from `get_inventory()` a separate class, with specific print method that prints more nicely. For example, list of files is not printed anymore, thus also changed the default of `add_files` in `get_inventory()` to `TRUE` instead of `FALSE`.
+- added workaround for "months since" calendar, which does not work well with ncdf4.helpers
 
 ---
 

@@ -102,6 +102,7 @@ rotpole_nc_point_to_dt <- function(filename,
                                                 list(X = cell_xy[1], Y = cell_xy[2])))
 
 
+
   times <- nc.get.time.series(ncobj, variable)
 
   if(all(is.na(times))){
@@ -130,12 +131,23 @@ rotpole_nc_point_to_dt <- function(filename,
 
     }
 
+  }  else if(startsWith(ncobj$dim$time$units, "months since")){
+    # ncdf4.helpers workaround for "months since" time information
+    origin <- lubridate::as_date(sub("months since ", "", ncobj$dim$time$units))
+    dates <- origin + months(round(ncvar_get(ncobj, "time")))
+    times <- dates
+
   } else {
     # standard calendar: extract time dimension in IDate format (assuming daily data)
     times %>%
       PCICt::as.POSIXct.PCICt() %>%
       as.Date -> dates
   }
+
+
+
+
+
 
 
   nc_close(ncobj)

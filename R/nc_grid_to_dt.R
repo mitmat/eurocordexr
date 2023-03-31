@@ -83,6 +83,7 @@ nc_grid_to_dt <- function(filename,
   dim_x <- ncvar_get(ncobj, dimnames[1])
   dim_y <- ncvar_get(ncobj, dimnames[2])
 
+
   times <- nc.get.time.series(ncobj, variable)
 
   if(all(is.na(times))){
@@ -96,12 +97,22 @@ nc_grid_to_dt <- function(filename,
 
     dates <- as.character(trunc(times, "day"))
 
+  } else if(startsWith(ncobj$dim$time$units, "months since")){
+    # ncdf4.helpers workaround for "months since" time information
+    origin <- lubridate::as_date(sub("months since ", "", ncobj$dim$time$units))
+    dates <- origin + months(round(ncvar_get(ncobj, "time")))
+    times <- dates
+
   } else {
 
     times %>%
       PCICt::as.POSIXct.PCICt() %>%
       as.Date -> dates
   }
+
+
+
+
 
   nx <- length(dim_x)
   ny <- length(dim_y)
@@ -142,8 +153,8 @@ nc_grid_to_dt <- function(filename,
     setnames(dat, c("x", "y"), dimnames[1:2])
   }
 
-  if(!all(is.na(times)) &&
-     interpolate_to_standard_calendar &&
+  if(interpolate_to_standard_calendar &&
+     !all(is.na(times)) &&
      ! attr(times, "cal") %in% c("gregorian", "proleptic_gregorian")){
 
     if(verbose) cat("Interpolating to standard calendar.\n")
