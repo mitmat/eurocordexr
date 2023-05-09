@@ -35,6 +35,7 @@ The checks are \itemize{
 from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
 because it has very heterogeneous periods; cordex-adjust has historical and
 rcp* combined
+\item that each rcp* has a corresponding historical run
 \item that all variables (tas, pr, ...) are available for all models
 }
 }
