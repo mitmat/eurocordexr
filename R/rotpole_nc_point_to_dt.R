@@ -96,6 +96,10 @@ rotpole_nc_point_to_dt <- function(filename,
     cat("Euclidean distance in degrees = ", sqrt(grid_squared_dist[cell_xy]), "\n")
   }
 
+  if(missing(variable)){
+    variable <- get_varnames(filename)[1]
+    if(verbose) cat("No variable supplied. Took first one:", variable, "\n")
+  }
 
   values <- as.vector(nc.get.var.subset.by.axes(ncobj,
                                                 variable,

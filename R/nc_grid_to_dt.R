@@ -78,6 +78,11 @@ nc_grid_to_dt <- function(filename,
 
   if(verbose) cat("Succesfully opened file:", filename, "\n")
 
+  if(missing(variable)){
+    variable <- get_varnames(filename)[1]
+    if(verbose) cat("No variable supplied. Took first one:", variable, "\n")
+  }
+
   dimnames <- nc.get.dim.names(ncobj, variable)
 
   dim_x <- ncvar_get(ncobj, dimnames[1])
