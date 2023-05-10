@@ -105,7 +105,7 @@ nc_grid_to_dt <- function(filename,
   } else if(startsWith(ncobj$dim$time$units, "months since")){
     # ncdf4.helpers workaround for "months since" time information
     origin <- lubridate::as_date(sub("months since ", "", ncobj$dim$time$units))
-    dates <- origin + months(round(ncvar_get(ncobj, "time")))
+    dates <- origin + months(floor(ncvar_get(ncobj, "time")))
     times <- dates
 
   } else {
