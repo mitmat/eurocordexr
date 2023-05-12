@@ -4,11 +4,13 @@
 \alias{check_inventory}
 \title{Perform some checks on the inventory}
 \usage{
-check_inventory(data_inventory, check_vars = FALSE)
+check_inventory(data_inventory, check_hist = FALSE, check_vars = FALSE)
 }
 \arguments{
 \item{data_inventory}{A data.table as resulting from
 \code{\link{get_inventory}}.}
+
+\item{check_hist}{Boolean, if \code{TRUE}, tests that each rcp* has a corresponding historical run.}
 
 \item{check_vars}{Boolean, if \code{TRUE}, runs \code{\link{compare_variables_in_inventory}}
 to check if all variables are available in all models.}
@@ -35,8 +37,9 @@ The checks are \itemize{
 from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
 because it has very heterogeneous periods; cordex-adjust has historical and
 rcp* combined
-\item that each rcp* has a corresponding historical run
-\item that all variables (tas, pr, ...) are available for all models
+\item that each rcp* has a corresponding historical run (optional, off by
+default; otherwise problematic with merged hist and rcp runs, as in cordex-adjust)
+\item that all variables (tas, pr, ...) are available for all models (optional, off by default)
 }
 }
 \examples{

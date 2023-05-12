@@ -16,13 +16,15 @@
 #' from 1950/70 - 2005, and rcp* from 2006 - 2100; evaluation is not checked,
 #' because it has very heterogeneous periods; cordex-adjust has historical and
 #' rcp* combined
-#' \item that each rcp* has a corresponding historical run
-#' \item that all variables (tas, pr, ...) are available for all models
+#' \item that each rcp* has a corresponding historical run (optional, off by
+#' default; otherwise problematic with merged hist and rcp runs, as in cordex-adjust)
+#' \item that all variables (tas, pr, ...) are available for all models (optional, off by default)
 #' }
 #'
 #'
 #' @param data_inventory A data.table as resulting from
 #'   \code{\link{get_inventory}}.
+#' @param check_hist Boolean, if \code{TRUE}, tests that each rcp* has a corresponding historical run.
 #' @param check_vars Boolean, if \code{TRUE}, runs \code{\link{compare_variables_in_inventory}}
 #'  to check if all variables are available in all models.
 #'
@@ -44,6 +46,7 @@
 #' inv_check
 #' }
 check_inventory <- function(data_inventory,
+                            check_hist = FALSE,
                             check_vars = FALSE){
 
   dat_inv <- copy(data_inventory)
@@ -114,12 +117,13 @@ check_inventory <- function(data_inventory,
 
 
   # check that each rcp has a historical
-  dat_hist <- dat_inv[!grepl("Adjust", variable) & timefreq != "fx" & experiment == "historical",
-                      .(variable, domain, gcm, institute_rcm, ensemble, downscale_realisation, timefreq)]
-  l_out$missing_historical <- dat_inv[
-    !grepl("Adjust", variable) & timefreq != "fx" & experiment != "historical"
-  ][!dat_hist, on = names(dat_hist)]
-
+  if(check_hist){
+    dat_hist <- dat_inv[!grepl("Adjust", variable) & timefreq != "fx" & experiment == "historical",
+                        .(variable, domain, gcm, institute_rcm, ensemble, downscale_realisation, timefreq)]
+    l_out$missing_historical <- dat_inv[
+      !grepl("Adjust", variable) & timefreq != "fx" & experiment != "historical"
+    ][!dat_hist, on = names(dat_hist)]
+  }
 
   # check for complete combinations for all variables
   if(check_vars){
@@ -206,18 +210,19 @@ print.eurocordexr_inv_check <- function(x, ...){
 
 
   # check that each rcp has a historical
-  if(nrow(x$missing_historical) == 0){
-    cat("All rcp simulations have a corresponding historical run.\n")
-  } else {
-    cat("Following scenario model runs do not have a corresponding historical run:", "\n")
-    print(x$missing_historical)
+  if(!is.null(x$missing_historical)){
+    if(nrow(x$missing_historical) == 0){
+      cat("All rcp simulations have a corresponding historical run.\n")
+    } else {
+      cat("Following scenario model runs do not have a corresponding historical run:", "\n")
+      print(x$missing_historical)
+    }
+    cat("------------------------------------------------------\n")
+    cat("------------------------------------------------------\n")
   }
-  cat("------------------------------------------------------\n")
-  cat("------------------------------------------------------\n")
 
   if(!is.null(x$incomplete_variables)){
-    test_variable <- nrow(x$incomplete_variables) > 0
-    if(test_variable){
+    if(nrow(x$incomplete_variables) > 0){
       cat("Following models do not have all variables:", "\n")
       print(x$incomplete_variables)
     } else {
