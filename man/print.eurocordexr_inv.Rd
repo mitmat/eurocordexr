@@ -11,6 +11,8 @@
 
 \item{all_cols}{Boolean (default \code{FALSE}), if \code{TRUE}, will print all
 columns available}
+
+\item{...}{passed on to \code{\link[data.table:print.data.table]{data.table::print.data.table}}}
 }
 \value{
 x invisibly, used for side effects: prints to console

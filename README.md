@@ -12,7 +12,7 @@ Main components:
 
 Alternatives:
 
-The [stars](https://cran.r-project.org/web/packages/stars/index.html) and [terra](https://cran.r-project.org/web/packages/terra/index.html) (previously raster) packages can be used similarly, although the functionality for rotated pole grids and non-standard calendars might be different.
+The [stars](https://CRAN.R-project.org/package=stars) and [terra](https://CRAN.R-project.org/package=terra) (previously raster) packages can be used similarly, although the functionality for rotated pole grids and non-standard calendars might be different.
  
 ## Installation
 

@@ -123,12 +123,16 @@ get_inventory <- function(path,
 #' @param x data.table to print
 #' @param all_cols Boolean (default \code{FALSE}), if \code{TRUE}, will print all
 #'   columns available
+#' @param ... passed on to \code{\link[data.table:print.data.table]{data.table::print.data.table}}
 #'
 #' @return x invisibly, used for side effects: prints to console
 #'
 #' @seealso \code{\link{print.default}}
 #' @export
 print.eurocordexr_inv <- function(x, all_cols = F, ...){
+
+  # remove "eurocordexr_inv" class, so print falls back to data.table default (internal)
+  setattr(x, "class", c("data.table", "data.frame"))
 
   cols_optional <- c("nn_files",
                      "total_simulation_years",
@@ -142,24 +146,27 @@ print.eurocordexr_inv <- function(x, all_cols = F, ...){
     avail <- cols_optional %in% colnames(x)
     cols_not_print <- cols_optional[avail]
     n <- length(cols_not_print)
-    data.table:::print.data.table(x[, -..cols_not_print],
-                                  class = TRUE, trunc.cols = FALSE,
-                                  ...)
+    print(x[, -..cols_not_print],
+          class = TRUE, trunc.cols = FALSE,
+          ...)
     # borrowed from data.table:::print.data.table()
     if(n > 0L){
       cat(sprintf(ngettext(n,
                            "%d variable not shown: %s\n",
                            "%d variables not shown: %s\n"),
                   n,
-                  data.table:::brackify(paste(cols_not_print, class_abbs[avail]))))
+                  paste(cols_not_print, class_abbs[avail], collapse = ", ")))
     }
 
 
   } else {
-    data.table:::print.data.table(x,
-                                  class = TRUE, trunc.cols = FALSE,
-                                  ...)
+    print(x,
+          class = TRUE, trunc.cols = FALSE,
+          ...)
   }
+
+  # add back "eurocordexr_inv" class, since modified by refernce
+  setattr(x, "class", c("eurocordexr_inv", "data.table", "data.frame"))
 
   invisible(x)
 }

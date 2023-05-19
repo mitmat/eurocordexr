@@ -1,4 +1,4 @@
-# eurocordexr 0.2.3 (dev)
+# eurocordexr 0.2.3
 
 - updated `check_inventory()` to work with CORDEX-Adjust data, too. Check for full period also works if historical is merged to the RCP in filenames.
 - added `date_range` parameter to `nc_grid_to_dt()` to allow easier extraction of subset of data

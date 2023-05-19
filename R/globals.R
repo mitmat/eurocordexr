@@ -4,6 +4,7 @@ globvars <- c(".", "N", "V9",
               "ensemble", "experiment", "file_fullpath",
               "fn", "gcm", "icell", "institute_rcm",
               "list_files", "patterns", "period", "timefreq",
-              "total_simulation_years", "value", "variable", "x", "y")
+              "total_simulation_years", "value", "variable", "x", "y",
+              "..cols_not_print")
 
 utils::globalVariables(globvars)

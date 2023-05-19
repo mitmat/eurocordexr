@@ -78,8 +78,8 @@ str(dat)
 }
 \seealso{
 The raster and terra packages can also open netcdf files and create
-  data.frames with \code{\link[raster:as.data.frame]{raster::as.data.frame}}
-  or \code{\link[terra:as.data.frame]{terra::as.data.frame}}. But, it does
+  data.frames with \code{raster::as.data.frame}
+  or \code{terra::as.data.frame}. But, it does
   not handle non-standard calendars, and returns a data.frame, which is
   slower than data.table.
 }
