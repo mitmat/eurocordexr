@@ -1,6 +1,8 @@
 # eurocordexr 0.2.4
 
 - added internal data vectors with short names for GCMs and RCMs
+- removed depends, only namespace imports (except data.table)
+- added tests
 
 ---
 

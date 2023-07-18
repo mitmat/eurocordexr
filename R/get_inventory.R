@@ -69,7 +69,7 @@ get_inventory <- function(path,
 
     # 360 calendar adjustment
     lgl_check <- lubridate::month(date_end) == 12 & lubridate::day(date_end) == 30
-    day(date_end[lgl_check]) <- 31
+    lubridate::`day<-`(date_end[lgl_check], 31)
 
     mapply(seq, date_start, date_end, by = "day") %>%
       unlist %>%
