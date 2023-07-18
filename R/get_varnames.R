@@ -6,9 +6,6 @@
 #'
 #' @return vector of variable names
 #'
-#' @import ncdf4
-#' @import ncdf4.helpers
-#'
 #' @export
 #'
 #' @examples
@@ -18,9 +15,9 @@
 #'
 get_varnames <- function(filename){
 
-  ncobj <- nc_open(filename)
-  vars <- nc.get.variable.list(ncobj)
-  nc_close(ncobj)
+  ncobj <- ncdf4::nc_open(filename)
+  vars <- ncdf4.helpers::nc.get.variable.list(ncobj)
+  ncdf4::nc_close(ncobj)
   vars
 
 }

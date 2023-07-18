@@ -17,8 +17,7 @@
 #' @export
 #'
 #' @import data.table
-#' @importFrom magrittr %>% equals
-#' @importFrom lubridate ymd day day<-
+#' @importFrom magrittr %>%
 #'
 #'
 #' @examples
@@ -60,8 +59,8 @@ get_inventory <- function(path,
 
   # prep dates
   dat_info[, c("date_start", "date_end") := tstrsplit(period, "-")]
-  dat_info[, date_start := ymd(date_start)]
-  dat_info[, date_end := ymd(date_end)]
+  dat_info[, date_start := lubridate::ymd(date_start)]
+  dat_info[, date_end := lubridate::ymd(date_end)]
 
   # helper fun to check for complete contiguous period
   f_date_complete <- function(date_start, date_end){
@@ -69,7 +68,7 @@ get_inventory <- function(path,
     if(all(is.na(date_start))) return(NA)
 
     # 360 calendar adjustment
-    lgl_check <- month(date_end) == 12 & day(date_end) == 30
+    lgl_check <- lubridate::month(date_end) == 12 & lubridate::day(date_end) == 30
     day(date_end[lgl_check]) <- 31
 
     mapply(seq, date_start, date_end, by = "day") %>%
@@ -77,7 +76,7 @@ get_inventory <- function(path,
       sort %>%
       unique %>%
       diff %>%
-      equals(1) %>%
+      magrittr::equals(1) %>%
       all
 
   }
@@ -86,7 +85,7 @@ get_inventory <- function(path,
 
     if(all(is.na(date_start))) return(NA_integer_)
 
-    mapply(seq, year(date_start), year(date_end), SIMPLIFY = FALSE) %>%
+    mapply(seq, lubridate::year(date_start), lubridate::year(date_end), SIMPLIFY = FALSE) %>%
       unlist %>%
       unique %>%
       length

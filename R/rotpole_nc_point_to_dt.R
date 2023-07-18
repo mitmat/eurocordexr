@@ -34,9 +34,6 @@
 #'
 #' @import data.table
 #' @importFrom magrittr %>%
-#' @import PCICt
-#' @import ncdf4
-#' @import ncdf4.helpers
 #'
 #' @examples
 #' # example data from EURO-CORDEX (cropped for size)
@@ -73,13 +70,13 @@ rotpole_nc_point_to_dt <- function(filename,
                                    verbose = FALSE,
                                    add_grid_coord = FALSE){
 
-  ncobj <- nc_open(filename,
-                   readunlim = FALSE)
+  ncobj <- ncdf4::nc_open(filename,
+                          readunlim = FALSE)
 
   if(verbose) cat("Succesfully opened file:", filename, "\n")
 
-  grid_lon <- ncvar_get(ncobj, "lon")
-  grid_lat <- ncvar_get(ncobj, "lat")
+  grid_lon <- ncdf4::ncvar_get(ncobj, "lon")
+  grid_lat <- ncdf4::ncvar_get(ncobj, "lat")
 
   grid_squared_dist <- (grid_lat - point_lat)^2 + (grid_lon - point_lon)^2
 
@@ -101,13 +98,17 @@ rotpole_nc_point_to_dt <- function(filename,
     if(verbose) cat("No variable supplied. Took first one:", variable, "\n")
   }
 
-  values <- as.vector(nc.get.var.subset.by.axes(ncobj,
-                                                variable,
-                                                list(X = cell_xy[1], Y = cell_xy[2])))
+  values <- as.vector(
+    ncdf4.helpers::nc.get.var.subset.by.axes(
+      ncobj,
+      variable,
+      list(X = cell_xy[1], Y = cell_xy[2])
+    )
+  )
 
 
 
-  times <- nc.get.time.series(ncobj, variable)
+  times <- ncdf4.helpers::nc.get.time.series(ncobj, variable)
 
   if(all(is.na(times))){
 
@@ -154,7 +155,7 @@ rotpole_nc_point_to_dt <- function(filename,
 
 
 
-  nc_close(ncobj)
+  ncdf4::nc_close(ncobj)
 
   dat <- data.table(date = dates,
                     value = values)
