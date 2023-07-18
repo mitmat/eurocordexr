@@ -7,3 +7,5 @@
 ^LICENSE\.md$
 Rtemp/
 ^revdep$
+^CRAN-SUBMISSION$
+^data-raw$

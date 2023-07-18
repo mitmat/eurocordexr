@@ -1,3 +1,9 @@
+# eurocordexr 0.2.4
+
+- added internal data vectors with short names for GCMs and RCMs
+
+---
+
 # eurocordexr 0.2.3
 
 - updated `check_inventory()` to work with CORDEX-Adjust data, too. Check for full period also works if historical is merged to the RCP in filenames.
