@@ -27,6 +27,11 @@
 #' }
 compare_variables_in_inventory <- function(data_inventory, vars = NULL){
 
+  # NSE in R CMD check
+  list_files <- nn_files <- period_contiguous <- date_end <- variable <- NULL
+  all_date_start_equal <- all_years_equal <- NULL
+
+
   dat <- copy(data_inventory)
 
   if("list_files" %in% names(dat)) {

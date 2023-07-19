@@ -67,6 +67,9 @@ nc_grid_to_dt <- function(filename,
                           date_range,
                           verbose = FALSE){
 
+  # NSE in R CMD check
+  icell <- x <- y <- value <- NULL
+
   ncobj <- ncdf4::nc_open(filename,
                           readunlim = FALSE)
 
@@ -164,7 +167,7 @@ nc_grid_to_dt <- function(filename,
     dtx <- map_non_standard_calendar(times)
 
     dat <- dat[,
-                .(date = dtx$dates_full, value = value[dtx$idx_pcict]),
+                list(date = dtx$dates_full, value = value[dtx$idx_pcict]),
                 by = bycols]
 
   }

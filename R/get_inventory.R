@@ -32,6 +32,13 @@
 get_inventory <- function(path,
                           add_files = TRUE){
 
+  # NSE in R CMD check
+  list_files <- timefreq <- downscale_realisation <- experiment <- NULL
+  institute_rcm <- gcm <- domain <- variable <- ensemble <- fn <- NULL
+  V9 <- file_fullpath <- NULL
+  period <- date_start <- date_end <- NULL
+
+
   all_files_fullpath <- fs::dir_ls(path,
                                    regexp = "[.]nc$",
                                    recurse = TRUE)
@@ -96,14 +103,14 @@ get_inventory <- function(path,
 
   # get unique models
   dat_info_summary <- dat_info[,
-                               .(nn_files = .N,
-                                 date_start = min(date_start),
-                                 date_end = max(date_end),
-                                 total_simulation_years = f_sim_years(date_start, date_end),
-                                 period_contiguous = f_date_complete(date_start, date_end),
-                                 list_files = list(file_fullpath)),
-                               keyby = .(variable, domain, gcm, institute_rcm, experiment,
-                                         ensemble, downscale_realisation, timefreq)]
+                               list(nn_files = .N,
+                                    date_start = min(date_start),
+                                    date_end = max(date_end),
+                                    total_simulation_years = f_sim_years(date_start, date_end),
+                                    period_contiguous = f_date_complete(date_start, date_end),
+                                    list_files = list(file_fullpath)),
+                               keyby = list(variable, domain, gcm, institute_rcm, experiment,
+                                            ensemble, downscale_realisation, timefreq)]
 
   # remove files if not requested
   if(!add_files) dat_info_summary[, list_files := NULL]
