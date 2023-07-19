@@ -11,12 +11,25 @@ An object of class \code{character} of length 8.
 An object of class \code{character} of length 12.
 }
 \usage{
-shortnames_gcm[some_variable_with_long_GCM_names]
+shortnames_gcm
 
-shortnames_rcm[some_other_variable_with_long_RCM_names]
+shortnames_rcm
 }
 \description{
 character vectors with short names of RCM and GCMs, with the long RCM/GCM
 names as vector-names, so it can be used for renaming:
+}
+\examples{
+# for example from inventory
+fn_zip <- system.file("extdata", "inv-test-files.zip", package = "eurocordexr")
+tmpdir <- tempdir()
+unzip(fn_zip, exdir = tmpdir)
+dat_inv <- get_inventory(fs::path(tmpdir, "testdata"))
+# compare
+cbind(dat_inv$gcm, shortnames_gcm[dat_inv$gcm])
+cbind(dat_inv$institute_rcm, shortnames_rcm[dat_inv$institute_rcm])
+
+
+
 }
 \keyword{datasets}

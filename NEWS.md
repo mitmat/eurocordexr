@@ -1,8 +1,9 @@
 # eurocordexr 0.2.4
 
 - added internal data vectors with short names for GCMs and RCMs
-- removed depends, only namespace imports (except data.table)
+- removed depends, only namespace imports
 - added tests
+- added some test data to run examples in `get_inventory()` and `check_inventory()`
 
 ---
 

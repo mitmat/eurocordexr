@@ -22,15 +22,16 @@ their components (GCM, RCM, variable, experiment, ...) and aggregates over
 years.
 }
 \examples{
-\dontrun{
+# some empty example files
+fn_zip <- system.file("extdata", "inv-test-files.zip", package = "eurocordexr")
+tmpdir <- tempdir()
+unzip(fn_zip, exdir = tmpdir)
 
-path <- "/mnt/CEPH_BASEDATA/METEO/SCENARIO"
-dat <- get_inventory(path)
-print(dat)
+dat_inv <- get_inventory(fs::path(tmpdir, "testdata", "mixed-vars"))
+print(dat_inv)
 
-}
+
 }
 \seealso{
-\code{\link{compare_variables_in_inventory}} for further comparing
-  the results, and \code{\link{check_inventory}} for performing some checks.
+\code{\link{check_inventory}} for performing some checks.
 }

@@ -139,7 +139,7 @@ rotpole_nc_point_to_dt <- function(filename,
   }  else if(startsWith(ncobj$dim$time$units, "months since")){
     # ncdf4.helpers workaround for "months since" time information
     origin <- lubridate::as_date(sub("months since ", "", ncobj$dim$time$units))
-    dates <- origin + months(floor(ncvar_get(ncobj, "time")))
+    dates <- origin + months(floor(ncdf4::ncvar_get(ncobj, "time")))
     times <- dates
 
   } else {

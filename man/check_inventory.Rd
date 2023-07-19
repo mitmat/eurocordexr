@@ -43,11 +43,12 @@ default; otherwise problematic with merged hist and rcp runs, as in cordex-adjus
 }
 }
 \examples{
-\dontrun{
+# some empty example files
+fn_zip <- system.file("extdata", "inv-test-files.zip", package = "eurocordexr")
+tmpdir <- tempdir()
+unzip(fn_zip, exdir = tmpdir)
 
-path <- "/mnt/CEPH_PROJECTS/SCENARIO/CLIMATEDATA/"
-dat_inv <- get_inventory(path)
-inv_check <- check_inventory(dat_inv)
-inv_check
-}
+dat_inv <- get_inventory(fs::path(tmpdir, "testdata"))
+check_inventory(dat_inv)
+
 }

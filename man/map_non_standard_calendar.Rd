@@ -25,10 +25,10 @@ Gregorian. Assumes daily data as input.
 # example data from EURO-CORDEX (cropped for size)
 # non-standard calendar (360)
 fn2 <- system.file("extdata", "test2.nc", package = "eurocordexr")
-ncobj <- nc_open(fn2)
+ncobj <- ncdf4::nc_open(fn2)
 
 # read as PCICt-class
-times <- nc.get.time.series(ncobj, "tasmin")
+times <- ncdf4.helpers::nc.get.time.series(ncobj, "tasmin")
 str(times)
 
 dtx <- map_non_standard_calendar(times)

@@ -70,10 +70,7 @@ cell center), so merging based on coordinates can produce arbitrary results
 \examples{
 # example data from EURO-CORDEX (cropped for size)
 fn1 <- system.file("extdata", "test1.nc", package = "eurocordexr")
-dat <- nc_grid_to_dt(
-  filename = fn1,
-  variable = "tasmin"
-)
+dat <- nc_grid_to_dt(fn1)
 str(dat)
 }
 \seealso{
