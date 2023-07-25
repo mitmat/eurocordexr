@@ -50,6 +50,8 @@ check_inventory <- function(data_inventory,
                             check_hist = FALSE,
                             check_vars = FALSE){
 
+  if(inherits(data_inventory, "cmip5")) stop("Supplied a CMIP5 inventory, please use check_inventory_cmip5() instead.")
+
   # NSE in R CMD check
   list_files <- ensembles <- N <-  NULL
   variable <- domain <- gcm <- institute_rcm <- experiment <- ensemble <- NULL

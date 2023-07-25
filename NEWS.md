@@ -4,6 +4,7 @@
 - removed depends, only namespace imports
 - added tests
 - added some test data to run examples in `get_inventory()` and `check_inventory()`
+- added function `get_inventory_cmip5()` to get CMIP5 gcm info
 
 ---
 
