@@ -1,3 +1,5 @@
+setDTthreads(1)
+
 fn_zip <- system.file("extdata", "inv-test-files-cmip5.zip", package = "eurocordexr")
 tmpdir <- tempdir()
 unzip(fn_zip, exdir = tmpdir)

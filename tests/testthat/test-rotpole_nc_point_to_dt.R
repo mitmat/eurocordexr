@@ -1,3 +1,5 @@
+setDTthreads(1)
+
 fn1 <- system.file("extdata", "test1.nc", package = "eurocordexr")
 fn2 <- system.file("extdata", "test2.nc", package = "eurocordexr")
 

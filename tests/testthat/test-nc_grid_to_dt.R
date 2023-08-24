@@ -1,3 +1,5 @@
+setDTthreads(1)
+
 fn1 <- system.file("extdata", "test1.nc", package = "eurocordexr")
 
 test_that("basic functionality", {
