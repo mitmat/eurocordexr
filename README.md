@@ -30,8 +30,8 @@ install.packages("eurocordexr")
 Or get the latest (development) version from github:
 
 ```{r}
-# or from github
-devtools::install_github("mitmat/eurocordexr")
+# from github
+remotes::install_github("mitmat/eurocordexr")
 ```
 
 Requires netCDF system libraries.
