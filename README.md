@@ -1,14 +1,17 @@
 ## Overview
 
 
-A package to make life easier working with daily netcdf files from the EURO-CORDEX RCMs. Relies on `data.table` to do the heavy data lifting.
+A package developped to make life easier working with daily netcdf files from the EURO-CORDEX RCMs. Relies on `data.table` to do the heavy data lifting.
+
+Works with many CF-conform netCDF files, like from CMIP, and others, too!
 
 Main components:
 
-  - extract single grid cells (e.g. for stations) from rotated pole grid: `rotpole_nc_point_to_dt()`
-  - extract the whole array of a variable in long format: `nc_grid_to_dt()`
+  - extract the whole array of a variable in long format, optionally subset by dates: `nc_grid_to_dt()`
   - can deal with non-standard calendars (360, noleap) and interpolate them
-  - get and check list of EURO-CORDEX .nc files: `get_inventory()`
+  - get and check list of EURO-CORDEX .nc files: `get_inventory()`, and CMIP5 (`get_inventory_cmip5()`)
+  - extract single grid cells (e.g. for stations) from rotated pole grid: `rotpole_nc_point_to_dt()`
+  - raw backbone to extract curvilinear netcdf array to long format: `nc_grid_to_dt_raw()`
 
 Alternatives:
 
@@ -31,18 +34,7 @@ Or get the latest (development) version from github:
 devtools::install_github("mitmat/eurocordexr")
 ```
 
-Requires the following packages (which should be installed automatically with above):
-
-```{r}
-library(data.table)
-library(lubridate)
-library(magrittr)
-library(ncdf4)
-library(ncdf4.helpers)
-```
-    
-
-For the netCDF packages, depending on your system, additional libraries might be needed.
+Requires netCDF system libraries.
 
 ## Other
     
