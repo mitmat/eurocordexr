@@ -80,10 +80,13 @@
       ------------------------------------------------------
       Following model runs do not have complete periods: 
          variable domain                   gcm institute_rcm experiment ensemble
+           <char> <char>                <char>        <char>     <char>   <char>
       1:       pr EUR-11 CNRM-CERFACS-CNRM-CM5 CNRM-ALADIN63 historical   r1i1p1
          downscale_realisation timefreq nn_files date_start   date_end
+                        <char>   <char>    <int>     <Date>     <Date>
       1:                    v2      day        5 1951-01-01 1985-12-31
          total_simulation_years period_contiguous
+                          <int>            <lgcl>
       1:                     25             FALSE
       ------------------------------------------------------
       ------------------------------------------------------

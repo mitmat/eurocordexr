@@ -31,9 +31,7 @@ print.eurocordexr_inv <- function(x, all_cols = F, ...){
     avail <- cols_optional %in% colnames(x)
     cols_not_print <- cols_optional[avail]
     n <- length(cols_not_print)
-    print(x[, -..cols_not_print],
-          class = TRUE, trunc.cols = FALSE,
-          ...)
+    print(x[, -..cols_not_print], ...)
     # borrowed from data.table:::print.data.table()
     if(n > 0L){
       cat(sprintf(ngettext(n,
@@ -45,12 +43,10 @@ print.eurocordexr_inv <- function(x, all_cols = F, ...){
 
 
   } else {
-    print(x,
-          class = TRUE, trunc.cols = FALSE,
-          ...)
+    print(x, ...)
   }
 
-  # add back "eurocordexr_inv" class, since modified by refernce
+  # add back "eurocordexr_inv" class, since modified by reference
   setattr(x, "class", c("eurocordexr_inv", "data.table", "data.frame"))
 
   invisible(x)

@@ -109,7 +109,7 @@ get_inventory <- function(path,
                                     total_simulation_years = f_sim_years(date_start, date_end),
                                     period_contiguous = f_date_complete(date_start, date_end),
                                     list_files = list(file_fullpath)),
-                               keyby = list(variable, domain, gcm, institute_rcm, experiment,
+                               by = list(variable, domain, gcm, institute_rcm, experiment,
                                             ensemble, downscale_realisation, timefreq)]
 
   # remove files if not requested

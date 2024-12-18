@@ -108,7 +108,7 @@ get_inventory_cmip5 <- function(path,
                                  total_simulation_years = f_sim_years(date_start, date_end),
                                  period_contiguous = f_date_complete_month(date_start, date_end),
                                  list_files = list(file_fullpath)),
-                               keyby = .(variable, timefreq, gcm, experiment, ensemble)]
+                               by = .(variable, timefreq, gcm, experiment, ensemble)]
 
   # remove files if not requested
   if(!add_files) dat_info_summary[, list_files := NULL]
