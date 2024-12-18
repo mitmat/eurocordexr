@@ -9,3 +9,4 @@ Rtemp/
 ^revdep$
 ^CRAN-SUBMISSION$
 ^data-raw$
+^\.github$
