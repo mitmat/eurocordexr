@@ -110,6 +110,9 @@ get_inventory_cmip5 <- function(path,
                                  list_files = list(file_fullpath)),
                                by = .(variable, timefreq, gcm, experiment, ensemble)]
 
+  setorder(dat_info_summary,
+           variable, timefreq, gcm, experiment, ensemble)
+
   # remove files if not requested
   if(!add_files) dat_info_summary[, list_files := NULL]
 

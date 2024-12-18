@@ -112,6 +112,10 @@ get_inventory <- function(path,
                                by = list(variable, domain, gcm, institute_rcm, experiment,
                                             ensemble, downscale_realisation, timefreq)]
 
+  setorder(dat_info_summary,
+           variable, domain, gcm, institute_rcm, experiment,
+           ensemble, downscale_realisation, timefreq)
+
   # remove files if not requested
   if(!add_files) dat_info_summary[, list_files := NULL]
 
