@@ -40,6 +40,11 @@ The [stars](https://CRAN.R-project.org/package=stars) and
 packages can be used similarly, although the functionality for rotated
 pole grids and non-standard calendars might be different.
 
+## Examples
+
+See the article on how to [read rotated-pole grids](articles/grids.html)
+for some usage examples.
+
 ## Installation
 
 Get the CRAN version:
@@ -58,12 +63,6 @@ pak::pak("mitmat/eurocordexr")
 ```
 
 Requires netCDF system libraries.
-
-## Other
-
-Some documentation can be found in the `doc/` subfolder. To view the
-HTML files you may need to download the files (and not view them in
-github).
 
 ## Contribution and help
 

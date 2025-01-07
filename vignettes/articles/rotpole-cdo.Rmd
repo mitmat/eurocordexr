@@ -1,0 +1,78 @@
+---
+title: "Convert rotated-pole to regular lonlat grid"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This is a tutorial how to create the config file for remapping with CDO. It is based on the code from the [TopoCLIM](https://github.com/joelfiddes/topoCLIM/blob/master/tclim/esgf_post.py) package. Remapping is done to grid centres, which is half a gridbox (res/2) is added.
+
+First, we get the information from the input netcdf file (rotated-pole).
+
+```{r}
+library(ncdf4)
+file_nc <- system.file("extdata", "alps1.nc", package = "eurocordexr")
+nc_obj <- nc_open(file_nc)
+```
+
+
+We can check that the resolution is what we expect:
+
+```{r}
+# resolution
+ncvar_get(nc_obj, "rlon") |> diff() |> round(3) |> table()
+ncvar_get(nc_obj, "rlat") |> diff() |> round(3) |> table()
+# -> res: 0.11
+res <- 0.11
+```
+
+Optionally set a buffer:
+```{r}
+buffer <- 0 # or 2*res or something else
+```
+
+For the extent, here I take the interior of the grid, which has already been cropped (with `cdo sellonlatbox`). Note that remapping in CDO can crop at the same time, so probably you'd want to manually set the extent and apply it directly to the whole domain files (and not crop beforehand).
+
+```{r}
+mat_lat <- ncvar_get(nc_obj, "lat")
+mat_lon <- ncvar_get(nc_obj, "lon")
+
+# this takes the interior only
+latS <- mat_lat |> apply(1, min) |> max()
+latN <- mat_lat |> apply(1, max) |> min()
+lonW <- mat_lon |> apply(2, min) |> max()
+lonE <- mat_lon |> apply(2, max) |> min()
+```
+
+
+
+Then write the config file.
+
+```{r}
+file_content <- paste0(
+  "gridtype = lonlat\n",
+  "xsize = ", round((lonE - lonW + 2*buffer) / res), "\n",
+  "ysize = ", round((latN - latS + 2*buffer) / res), "\n",
+  "xfirst = ", (lonW - buffer + res / 2), "\n",
+  "xinc = ", res, "\n",
+  "yfirst = ", (latS - buffer + res / 2), "\n",
+  "yinc = ", res, "\n"
+)
+cat(file_content)
+
+# to write directly to a file:
+# cat(file_content, file = "coords4cdo.txt")
+
+```
+
+This can be used with CDO:
+```{bash eval=FALSE}
+cdo remapbil,coords4cdo.txt rotated.nc regular.nc
+```
+
