@@ -1,7 +1,7 @@
 # eurocordexr 0.2.5
 
-- added `nc_grid_to_dt_raw()`, which gives a more basic access to the netcdf file
-using the RNetCDF library
+- added `nc_grid_to_dt_raw()`, which gives a more basic access to the netcdf file using the RNetCDF library
+- added pkgdown website and some usage articles
 
 ---
 

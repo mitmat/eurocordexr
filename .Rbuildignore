@@ -10,3 +10,8 @@ Rtemp/
 ^CRAN-SUBMISSION$
 ^data-raw$
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^vignettes/articles$

@@ -12,6 +12,7 @@ Daily 'netCDF' data from e.g. regional climate models (RCMs) are not trivial to 
 Useful links:
 \itemize{
   \item \url{https://github.com/mitmat/eurocordexr}
+  \item \url{https://mitmat.github.io/eurocordexr/}
   \item Report bugs at \url{https://github.com/mitmat/eurocordexr/issues}
 }
 
