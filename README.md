@@ -43,8 +43,8 @@ pole grids and non-standard calendars might be different.
 ## Examples
 
 See the article on how to [read rotated-pole
-grids](https://mitmat.github.io/eurocordexr/docs/articles/grids.html)
-for some usage examples.
+grids](https://mitmat.github.io/eurocordexr/articles/grids.html) for
+some usage examples.
 
 ## Installation
 
