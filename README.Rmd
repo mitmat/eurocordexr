@@ -47,7 +47,7 @@ The [stars](https://CRAN.R-project.org/package=stars) and [terra](https://CRAN.R
 
 ## Examples
 
-See the article on how to [read rotated-pole grids](articles/grids.html) for some usage examples.
+See the article on how to [read rotated-pole grids](https://mitmat.github.io/eurocordexr/docs/articles/grids.html) for some usage examples.
 
 
 ## Installation

@@ -7,7 +7,7 @@
 #' @param times Vector of class PCICt (will be truncated to days).
 #'
 #'
-#' @return A \code{\link{data.table}} with columns:
+#' @return A \code{\link[data.table]{data.table}} with columns:
 #'
 #'   \itemize{ \item dates_full: sequence of standard dates from min to max date
 #'   in input times as data.table::IDate \item dates_pcict_inter: which dates in

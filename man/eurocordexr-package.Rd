@@ -6,6 +6,8 @@
 \alias{eurocordexr-package}
 \title{eurocordexr: Makes it Easier to Work with Daily 'netCDF' from EURO-CORDEX RCMs}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Daily 'netCDF' data from e.g. regional climate models (RCMs) are not trivial to work with. This package, which relies on 'data.table', makes it easier to deal with large data from RCMs, such as from EURO-CORDEX (\url{https://www.euro-cordex.net/}, \url{https://cordex.org/data-access/}). It has functions to extract single grid cells from rotated pole grids as well as the whole array in long format. Can handle non-standard calendars (360, noleap) and interpolate them to a standard one. Potentially works with many CF-conform 'netCDF' files.
 }
 \seealso{
