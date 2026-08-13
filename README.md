@@ -35,6 +35,9 @@ too!
 
 ### Alternatives:
 
+The [ncdCF](https://github.com/R-CF/ncdfCF) package works very well with CF conform netcdfs, and has great support for rotated pole and non-standard calendars.
+
+
 The [stars](https://CRAN.R-project.org/package=stars) and
 [terra](https://CRAN.R-project.org/package=terra) (previously raster)
 packages can be used similarly, although the functionality for rotated
@@ -48,14 +51,17 @@ some usage examples.
 
 ## Installation
 
-Get the CRAN version:
+CRAN version currently unavailable due to unresolved dependencies (PCICt).
 
+<!--
 ``` r
 # from CRAN
 install.packages("eurocordexr")
 ```
+-->
 
-Or get the latest (development) version from github:
+
+Get the latest (development) version from github:
 
 ``` r
 # from github
